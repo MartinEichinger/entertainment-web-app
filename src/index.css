@@ -1,13 +1,85 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Outfit", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(16, 20, 30);
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body h1 {
+  font: normal normal 300 32px/32px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
 }
+body h2 {
+  font: normal normal 300 24px/24px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
+}
+body h3 {
+  font: normal normal 500 24px/24px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
+}
+body h4 {
+  font: normal normal 500 18px/18px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
+}
+body p {
+  font: normal normal 300 15px/15px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
+  margin-bottom: 0px;
+}
+body p .light {
+  font: normal normal 300 13px/13px "Outfit";
+}
+body #root {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+body .custom-scroll-vert {
+  position: relative;
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+body .custom-scroll-vert::-webkit-scrollbar {
+  width: 10px;
+}
+body .custom-scroll-vert::-webkit-scrollbar-track {
+  position: relative;
+  background: rgba(22, 29, 47, 0.51);
+  border-radius: 5px;
+  left: -30px;
+}
+body .custom-scroll-vert::-webkit-scrollbar-thumb {
+  background: rgba(90, 105, 143, 0.5);
+  border-radius: 5px;
+}
+body .custom-scroll-vert::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 105, 143, 0.5);
+}
+body .custom-scroll-horiz {
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+body .custom-scroll-horiz::-webkit-scrollbar {
+  height: 10px;
+}
+body .custom-scroll-horiz::-webkit-scrollbar-track {
+  position: relative;
+  background: rgba(22, 29, 47, 0.51);
+  border-radius: 5px;
+  left: -30px;
+}
+body .custom-scroll-horiz::-webkit-scrollbar-thumb {
+  background: rgba(90, 105, 143, 0.5);
+  border-radius: 5px;
+}
+body .custom-scroll-horiz::-webkit-scrollbar-thumb:hover {
+  background: rgb(22, 29, 47);
+}/*# sourceMappingURL=index.css.map */

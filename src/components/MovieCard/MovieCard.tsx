@@ -1,0 +1,79 @@
+import styled from '@emotion/styled';
+import { ReactComponent as BookmarkEmpty } from '../../images/icon-bookmark-empty.svg';
+import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.svg';
+import oval from '../../images/Oval.png';
+
+interface MovieCardProps {
+  img: string;
+  color: any;
+  data: any;
+  className?: string;
+}
+
+const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
+  return (
+    <MovieCardBody className={className + ' d-flex flex-column'} color={color}>
+      <div className="thumb">
+        <img src={img} alt="" />
+        <div className="bookmark">{data.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}</div>
+      </div>
+      <div className="props d-flex flex-row align-items-center">
+        <p className="light">{data.year}</p>
+        <img src={oval} alt="Point" />
+        <p className="light">{data.category}</p>
+        <img src={oval} alt="Point" />
+        <p className="light">{data.rating}</p>
+      </div>
+      <h4>{data.title}</h4>
+    </MovieCardBody>
+  );
+};
+
+export default MovieCard;
+
+type cssProp = {
+  color: any;
+};
+
+const MovieCardBody = styled.div<cssProp>`
+  margin-bottom: 32px;
+  min-width: 200px;
+
+  .thumb {
+    margin-bottom: 8px;
+    width: 100%;
+    height: 174px;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 174px;
+      border-radius: 8px;
+    }
+
+    .bookmark {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      right: 5px;
+      top: 5px;
+      text-align: center;
+      padding-top: 3px;
+      background-color: ${({ color }) => color.grey50};
+    }
+  }
+
+  .props {
+    margin-bottom: 5px;
+    p {
+      margin-right: 8px;
+    }
+
+    img {
+      width: 3px;
+      height: 3px;
+      margin-right: 8px;
+    }
+  }
+`;
