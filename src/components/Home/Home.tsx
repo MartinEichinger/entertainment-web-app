@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     moviesFiltered = movies;
     console.log('hier');
   } else {
-    moviesFiltered = movies.filter((item) => item.title.toLowerCase().search(val) > -1);
+    moviesFiltered = movies.filter((item) => item.title.toLowerCase().search(val.toLowerCase()) > -1);
     console.log('hier2');
   }
   console.log('Home/movies: ', movies);
@@ -54,7 +54,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
           )}
         </Trending>
       </SimpleBarHMH>
-      <h1>Recommended for you</h1>
+      <h1 className="h1_wo_margin">Recommended for you</h1>
       <SimpleBarHM forceVisible="y" autoHide={false}>
         <Recommended className="" color={color}>
           {moviesFiltered.length > 0 ? (
@@ -111,22 +111,15 @@ const HomeBody = styled.div`
   h1 {
     margin-top: 25px;
     margin-bottom: 25px;
+
+    &.h1_wo_margin {
+      margin-top: -30px;
+    }
   }
 `;
 
 const Trending = styled.div`
   margin-bottom: 25px;
-`;
-
-const Recommended = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 0px 20px;
-`;
-
-const MovieCardR = styled(MovieCard)`
-  margin-right: 4px;
-  margin-bottom: 32px;
 `;
 
 const MovieCardT = styled(MovieCard)`
@@ -145,4 +138,27 @@ const MovieCardT = styled(MovieCard)`
       height: 230px; //174
     }
   }
+
+  .props {
+    position: relative;
+    top: -70px;
+    margin-left: 24px;
+  }
+
+  h4 {
+    position: relative;
+    top: -70px;
+    margin-left: 24px;
+  }
+`;
+
+const Recommended = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 0px 20px;
+`;
+
+const MovieCardR = styled(MovieCard)`
+  margin-right: 4px;
+  margin-bottom: 32px;
 `;

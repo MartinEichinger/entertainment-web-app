@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import { ReactComponent as BookmarkEmpty } from '../../images/icon-bookmark-empty.svg';
 import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.svg';
 import oval from '../../images/Oval.png';
+import { ReactComponent as Movie } from '../../images/icon-category-movie.svg';
+import { ReactComponent as TV } from '../../images/icon-category-tv.svg';
 
 interface MovieCardProps {
   img: string;
@@ -20,7 +22,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
       <div className="props d-flex flex-row align-items-center">
         <p className="light">{data.year}</p>
         <img src={oval} alt="Point" />
-        <p className="light">{data.category}</p>
+        <div className="d-flex flex-row align-items-center">
+          {data.category === 'Movie' ? <MovieMC /> : <TVMC />}
+          <p className="light">{data.category}</p>
+        </div>
         <img src={oval} alt="Point" />
         <p className="light">{data.rating}</p>
       </div>
@@ -34,6 +39,14 @@ export default MovieCard;
 type cssProp = {
   color: any;
 };
+
+const MovieMC = styled(Movie)`
+  margin-right: 6px;
+`;
+
+const TVMC = styled(TV)`
+  margin-right: 6px;
+`;
 
 const MovieCardBody = styled.div<cssProp>`
   margin-bottom: 32px;
