@@ -7,6 +7,7 @@ This is a solution to the [Entertainment web app challenge on Frontend Mentor](h
 - [Overview](#overview)
   - [The challenge](#the-challenge)
   - [Screenshot](#screenshot)
+  - [Requirements] (#requirements)
   - [Links](#links)
 - [My process](#my-process)
   - [Built with](#built-with)

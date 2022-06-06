@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getMovies, IMovies } from '../../store/api';
-import { moviesReceived } from '../../store/movieSlices';
 import styled from '@emotion/styled';
 import Home from '../Home/Home';
 import Movies from '../Movies/Movies';
@@ -26,16 +24,18 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ color }) => {
+  const debug = true;
   const dispatch = useAppDispatch();
   let location = useLocation();
 
-  useEffect(() => {
+  /*   useEffect(() => {
+    if (debug) console.log('Dashboard/useEffect');
     getMovies().then((movies) => {
       dispatch(moviesReceived(movies));
     });
-  });
+  }); */
 
-  console.log(location);
+  if (debug) console.log('Dashboard/render: ', location);
 
   return (
     <Dash className="d-flex flex-row">

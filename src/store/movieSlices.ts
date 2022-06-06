@@ -1,19 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { IMovies } from './api';
 
-const debug = false;
+const debug = true;
 //const baseURL = process.env.REACT_APP_BACKEND_PATH;
 const removeURL = process.env.REACT_APP_STATIC_REMOVE;
 
 interface movieState {
   loading: boolean;
-  movies: any[] | IMovies[];
+  nowPlayingMovies: any[] | IMovies[];
+  popularMovies: any[] | IMovies[];
+  topRatedMovies: any[] | IMovies[];
+  upcomingMovies: any[] | IMovies[];
+}
+
+interface payloadProps {
+  movies: IMovies[];
+  type: string;
 }
 
 // initial state
 const initialState: movieState = {
   loading: false,
-  movies: [],
+  nowPlayingMovies: [],
+  popularMovies: [],
+  topRatedMovies: [],
+  upcomingMovies: [],
 };
 
 // create slice
@@ -36,31 +47,39 @@ export const slice = createSlice({
     },
 
     // onSuccess
-    moviesReceived: (state, action: PayloadAction<IMovies[]>) => {
-      if (debug) console.log('movie/moviesReceived: ', action.payload, removeURL);
-      var addObj = action.payload;
-      state.movies = addObj;
+    moviesReceived: (state, action: PayloadAction<payloadProps>) => {
+      if (debug) console.log('movie/moviesReceived: ', action);
+      var addObj = action.payload.movies;
+      if (action.payload.type === 'nowPlaying') {
+        state.nowPlayingMovies = addObj;
+      } else if (action.payload.type === 'popular') {
+        state.popularMovies = addObj;
+      } else if (action.payload.type === 'topRated') {
+        state.topRatedMovies = addObj;
+      } else if (action.payload.type === 'upcoming') {
+        state.upcomingMovies = addObj;
+      }
       state.loading = false;
     },
     movieUpdated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movy/movyUpdated: ', action.payload);
       var id = action.payload.id;
-      state.movies[id - 1] = action.payload;
+      state.nowPlayingMovies[id - 1] = action.payload;
       state.loading = false;
     },
     movieErrorUpdated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movy/movyErrorUpdated: ', action.payload);
       var id = action.payload.id;
-      state.movies[id - 1] = action.payload;
+      state.nowPlayingMovies[id - 1] = action.payload;
       state.loading = false;
     },
     movieCreated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movie/movieCreated: ', action.payload);
       let addObj = action.payload;
-      let lastObj = state.movies[state.movies.length - 1];
+      let lastObj = state.nowPlayingMovies[state.nowPlayingMovies.length - 1];
       addObj = { ...addObj, id: lastObj.id + 1 };
-      let compArr = [...state.movies, addObj];
-      state.movies = compArr;
+      let compArr = [...state.nowPlayingMovies, addObj];
+      state.nowPlayingMovies = compArr;
 
       state.loading = false;
     },
@@ -106,7 +125,4 @@ export const {
   movieDeleteFailed,
 } = slice.actions;
 
-//var addObj = action.payload;
-//var lastObj = state.companies.slice(-1);
-//addObj.id = lastObj.id++;
-//state.companies.push(action.payload);
+// export action creators

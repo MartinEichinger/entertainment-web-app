@@ -4,13 +4,13 @@
     "title": "Beyond Earth",
     "thumbnail": {
       "trending": {
-        "small": "/assets/thumbnails/beyond-earth/trending/small.jpg",
-        "large": "/assets/thumbnails/beyond-earth/trending/large.jpg"
+        "small": "https://image.tmdb.org/t/p/w500//fy8bBNQyKtRnznm3G3QWdu2wIC8.jpg",
+        "large": "https://image.tmdb.org/t/p/w500//fy8bBNQyKtRnznm3G3QWdu2wIC8.jpg"
       },
       "regular": {
-        "small": "/assets/thumbnails/beyond-earth/regular/small.jpg",
-        "medium": "/assets/thumbnails/beyond-earth/regular/medium.jpg",
-        "large": "/assets/thumbnails/beyond-earth/regular/large.jpg"
+        "small": "https://image.tmdb.org/t/p/w500//fy8bBNQyKtRnznm3G3QWdu2wIC8.jpg",
+        "medium": "https://image.tmdb.org/t/p/w500//fy8bBNQyKtRnznm3G3QWdu2wIC8.jpg",
+        "large": "https://image.tmdb.org/t/p/w500//fy8bBNQyKtRnznm3G3QWdu2wIC8.jpg"
       }
     },
     "year": 2019,

@@ -1,6 +1,13 @@
-const debug = false;
+import axios from 'axios';
+import React from 'react';
+import { useAppDispatch } from './hooks';
+import { moviesReceived } from './movieSlices';
 
-// companySlices
+const debug = true;
+const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
+const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
+const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
+
 export interface IMovies {
   id: number;
   title: string;
@@ -22,76 +29,106 @@ export interface IMovies {
   isTrending: boolean;
 }
 
-/* export const emptyCompany = {
-  id: 0,
-  name: 'Company',
-  company_info: {
-    company_name: '',
-    company_name_error: true,
-    company_number: '',
-    company_number_error: true,
-    industry: '',
-    industry_error: true,
-  },
-  mailing_address: {
-    address_line1: '',
-    address_line1_error: true,
-    address_line2: '',
-    address_line2_error: true,
-    city: '',
-    city_error: true,
-    state: '',
-    state_error: true,
-    postal_code: '',
-    postal_code_error: true,
-  },
-  package_return_address: {
-    same_as_mailing_address: false,
-    same_as_mailing_address_error: true,
-    address_line21: '',
-    address_line21_error: true,
-    address_line22: '',
-    address_line22_error: true,
-    city2: '',
-    city2_error: true,
-    state2: '',
-    state2_error: true,
-    postal_code2: '',
-    postal_code2_error: true,
-  },
-  primary_contact: {
-    first_name: '',
-    first_name_error: true,
-    last_name: '',
-    last_name_error: true,
-    title: '',
-    title_error: true,
-    primary_contact_email_address: '',
-    primary_contact_email_address_error: false,
-    primary_contact_phone_number: '',
-    primary_contact_phone_number_error: false,
-  },
-}; */
+async function getMovies(url: string, method: string, cat: string, wPage: boolean): Promise<IMovies[]> {
+  let arr: IMovies[] = [];
+  let len = wPage ? 50 : 1;
 
-export async function getMovies(): Promise<IMovies[]> {
-  const results = await fetch('/data.json');
-  const movies = results.json();
-  if (debug) console.log('api: ', movies);
+  for (let i = 1; i <= len; i++) {
+    let searchUrl = wPage
+      ? baseURL + url + '/' + cat + '?' + apiKey + '&page=' + i.toString()
+      : baseURL + url + '/' + cat + '?' + apiKey;
+
+    const response = axios.request({
+      method: method,
+      url: searchUrl,
+    });
+
+    let res = (await response).data;
+    //if (debug) console.log('api/res: ', res);
+
+    let arrTemp: IMovies[] = res.results.map((item: any) => {
+      //if (debug) console.log('api-detail: ', item);
+      return {
+        id: item.id,
+        title: item.title,
+        thumbnail: {
+          trending: {
+            small: imgURL + item.backdrop_path,
+            large: imgURL + item.backdrop_path,
+          },
+          regular: {
+            small: imgURL + item.backdrop_path,
+            medium: imgURL + item.backdrop_path,
+            large: imgURL + item.backdrop_path,
+          },
+        },
+        year: item.release_date?.slice(0, 4),
+        category: 'Movie',
+        rating: item.vote_average,
+        isBookmarked: false,
+        isTrending:
+          item.popularity > 600 &&
+          (item.release_date?.slice(0, 4) === '2021' || item.release_date?.slice(0, 4) === '2022'),
+      };
+    });
+    arr = arr.concat(arrTemp);
+  }
+  //if (debug) console.log('api: ', arr);
+  return arr;
+}
+
+// READ
+interface IProps {}
+
+export async function getNowPlayingMovies(): Promise<IMovies[]> {
+  if (debug) console.log('movieSlice/getNowPlayingMovies');
+
+  let url = 'movie';
+  let cat = 'now_playing';
+  let wPage = true;
+  let method = 'get';
+  //let movies: Movies[] = [];
+
+  const movies = await getMovies(url, method, cat, wPage);
   return movies;
 }
 
-/* export async function setCompanies(companies: Companies[]) {
-  console.log('api: ', companies);
-  var content = JSON.stringify(companies);
-  var fileName = '/datacompany.json';
-  var contentType = 'text/plain';
+export async function getPopularMovies(): Promise<IMovies[]> {
+  if (debug) console.log('movieSlice/getPopularMovies');
 
-  var a = document.createElement('a');
-  var file = new Blob([content], { type: contentType });
-  a.href = URL.createObjectURL(file);
-  a.download = fileName;
-  a.click();
-} */
+  let url = 'movie';
+  let cat = 'popular';
+  let wPage = true;
+  let method = 'get';
+  //let movies: Movies[] = [];
+
+  const movies = await getMovies(url, method, cat, wPage);
+  return movies;
+}
+
+export async function getTopRatedMovies(): Promise<IMovies[]> {
+  if (debug) console.log('movieSlice/getTopRatedMovies');
+
+  let url = 'movie';
+  let cat = 'top_rated';
+  let wPage = true;
+  let method = 'get';
+
+  const movies = await getMovies(url, method, cat, wPage);
+  return movies;
+}
+
+export async function getUpcomingMovies(): Promise<IMovies[]> {
+  if (debug) console.log('movieSlice/getUpcomingMovies');
+
+  let url = 'movie';
+  let cat = 'upcoming';
+  let wPage = true;
+  let method = 'get';
+
+  const movies = await getMovies(url, method, cat, wPage);
+  return movies;
+}
 
 // authSlices
 export interface Auth {

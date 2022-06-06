@@ -22,3 +22,6 @@
 .prettierrc.json
 preview.jpg
 README_old.md
+.apikey
+.env.local
+.env

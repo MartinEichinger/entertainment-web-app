@@ -12,8 +12,16 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  let movies: IMovies[] = useAppSelector((state) => state.movies.movies);
-  let moviesFiltered: IMovies[] | any;
+  const debug = true;
+  let moviesNowPlay: IMovies[] = useAppSelector((state) => state.movies.nowPlayingMovies);
+  let moviesPop: IMovies[] = useAppSelector((state) => state.movies.popularMovies);
+  let moviesTop: IMovies[] = useAppSelector((state) => state.movies.topRatedMovies);
+  let moviesUp: IMovies[] = useAppSelector((state) => state.movies.upcomingMovies);
+  let loadStatus: boolean = useAppSelector((state) => state.movies.loading);
+  let moviesNowPlayFiltered: IMovies[] | any;
+  let moviesPopFiltered: IMovies[] | any;
+  let moviesTopFiltered: IMovies[] | any;
+  let moviesUpFiltered: IMovies[] | any;
 
   // internal states
   const [val, setVal] = useState('');
@@ -21,44 +29,89 @@ const Home: React.FC<HomeProps> = ({ color }) => {
   const colorSB = { ...color, border: 'rgba(16, 20, 30, 1)', borderActive: 'rgba(90, 105, 143, 1)' };
 
   if (val === '') {
-    moviesFiltered = movies;
-    console.log('hier');
+    moviesNowPlayFiltered = moviesNowPlay;
+    moviesPopFiltered = moviesPop;
+    moviesTopFiltered = moviesTop;
+    moviesUpFiltered = moviesUp;
   } else {
-    moviesFiltered = movies.filter((item) => item.title.toLowerCase().search(val.toLowerCase()) > -1);
-    console.log('hier2');
+    moviesNowPlayFiltered = moviesNowPlay.filter(
+      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
+    );
+    moviesPopFiltered = moviesPop.filter(
+      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
+    );
+    moviesTopFiltered = moviesTop.filter(
+      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
+    );
+    moviesUpFiltered = moviesUp.filter(
+      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
+    );
   }
-  console.log('Home/movies: ', movies);
-  console.log('Home/Filtered: ', moviesFiltered);
-  console.log('Home/val: ', val);
+
+  if (debug)
+    console.log(
+      'Home/render: ',
+      moviesNowPlayFiltered,
+      moviesPopFiltered,
+      moviesTopFiltered,
+      moviesUpFiltered,
+      loadStatus
+    );
 
   return (
-    <HomeBody>
+    <HomeBody color={color}>
       <SearchBarHM
         color={colorSB}
         value={val}
         setValue={setVal}
         placeholder="Search for movies or TV series"
       />
-      <h1>Trending</h1>
+      <h1>Popular</h1>
       <SimpleBarHMH forceVisible="x" autoHide={false}>
         <Trending className="d-flex flex-row justify-content-between" color={color}>
-          {moviesFiltered.length > 0 ? (
-            (moviesFiltered as IMovies[])?.map((item, i) => {
+          {moviesPopFiltered.length > 0 ? (
+            (moviesPopFiltered as IMovies[])?.map((item, i) => {
               let img: string = '';
               if (item.isTrending) img = item.thumbnail.trending.large;
               if (item.isTrending) return <MovieCardT img={img} color={color} data={item} key={i} />;
               return null;
             })
           ) : (
-            <p>No entry found</p>
+            <p>No entry found - {loadStatus}</p>
           )}
         </Trending>
       </SimpleBarHMH>
-      <h1 className="h1_wo_margin">Recommended for you</h1>
+      <h1 className="h1_wo_margin">TopRated</h1>
       <SimpleBarHM forceVisible="y" autoHide={false}>
         <Recommended className="" color={color}>
-          {moviesFiltered.length > 0 ? (
-            (moviesFiltered as IMovies[])?.map((item, i) => {
+          {moviesTopFiltered.length > 0 ? (
+            (moviesTopFiltered as IMovies[])?.map((item, i) => {
+              let img = item.thumbnail.regular.large;
+              return <MovieCardR img={img} color={color} data={item} key={i} />;
+            })
+          ) : (
+            <p>No entry found</p>
+          )}
+        </Recommended>
+      </SimpleBarHM>
+      <h1 className="h1_wo_margin">Now Playing</h1>
+      <SimpleBarHM forceVisible="y" autoHide={false}>
+        <Recommended className="" color={color}>
+          {moviesNowPlayFiltered.length > 0 ? (
+            (moviesNowPlayFiltered as IMovies[])?.map((item, i) => {
+              let img = item.thumbnail.regular.large;
+              return <MovieCardR img={img} color={color} data={item} key={i} />;
+            })
+          ) : (
+            <p>No entry found</p>
+          )}
+        </Recommended>
+      </SimpleBarHM>
+      <h1 className="h1_wo_margin">Upcoming</h1>
+      <SimpleBarHM forceVisible="y" autoHide={false}>
+        <Recommended className="" color={color}>
+          {moviesUpFiltered.length > 0 ? (
+            (moviesUpFiltered as IMovies[])?.map((item, i) => {
               let img = item.thumbnail.regular.large;
               return <MovieCardR img={img} color={color} data={item} key={i} />;
             })
@@ -96,7 +149,7 @@ const SimpleBarHMH = styled(SimpleBar)`
 `;
 
 const SimpleBarHM = styled(SimpleBar)`
-  height: calc(100vh - 590px);
+  height: 520px; //calc(100vh - 590px);
   .simplebar-track {
     right: 5px;
   }
@@ -106,14 +159,17 @@ const SimpleBarHM = styled(SimpleBar)`
   }
 `;
 
-const HomeBody = styled.div`
+const HomeBody = styled.div<cssProps>`
   margin-top: 32px;
   h1 {
     margin-top: 25px;
     margin-bottom: 25px;
 
     &.h1_wo_margin {
-      margin-top: -30px;
+      margin: 15px 0px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      background-color: ${({ color }) => color.greyishBlue};
     }
   }
 `;
