@@ -11,6 +11,7 @@ import { ReactComponent as TrendingSVG } from '../../images/icon-nav-home.svg';
 import { ReactComponent as MoviesSVG } from '../../images/icon-nav-movies.svg';
 import { ReactComponent as SeriesSVG } from '../../images/icon-nav-tv-series.svg';
 import { ReactComponent as BookmarkedSVG } from '../../images/icon-nav-bookmark.svg';
+import avatar from '../../images/image-avatar.png';
 
 const navItems = [
   { icon: TrendingSVG, name: '', link: '/dashboard/home' },
@@ -30,18 +31,26 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
   if (debug) console.log('Dashboard/render: ', location);
 
   return (
-    <Dash className="d-flex flex-row">
-      <Nav className="d-flex flex-column align-items-center" color={color}>
+    <Dash className="d-flex flex-column flex-lg-row">
+      <Nav
+        className="d-flex flex-row flex-lg-column align-items-center justify-content-between"
+        color={color}
+      >
         <img src={Logo} alt="logo" />
-        {navItems.map((item, i) => {
-          let active = location.pathname === item.link;
+        <div className="link-items d-flex flex-row flex-lg-column align-items-center">
+          {navItems.map((item, i) => {
+            let active = location.pathname === item.link;
 
-          return (
-            <Link to={item.link} className={active ? 'nav-row active' : 'nav-row'} key={i}>
-              <item.icon />
-            </Link>
-          );
-        })}
+            return (
+              <Link to={item.link} className={active ? 'nav-row active' : 'nav-row'} key={i}>
+                <item.icon />
+              </Link>
+            );
+          })}
+        </div>
+        <div className="avatar">
+          <img src={avatar} alt="Logo" />
+        </div>
       </Nav>
       <Boards>
         <Routes>
@@ -73,9 +82,31 @@ const Nav = styled.div<dashCSSProps>`
   border-radius: 20px;
   //position: fixed;
 
+  @media (max-width: 991px) {
+    height: 96px;
+    width: calc(100vw - 50px);
+    margin: 23px 25px;
+    border-radius: 10px;
+
+    img {
+      margin-bottom: 0px !important;
+    }
+  }
+
   img {
     width: 32px;
+    height: 26px;
     margin-bottom: 55px;
+  }
+
+  .avatar {
+    border: 1px solid white;
+    border-radius: 50%;
+
+    img {
+      height: 32px;
+      margin-bottom: 0px;
+    }
   }
 
   a {
@@ -126,5 +157,9 @@ const Boards = styled.div`
   margin: 32px 0px 0px 4px;
   width: 100%;
   position: relative;
-  //left: calc(100vw - 1440px + 160px);
+
+  @media (max-width: 991px) {
+    margin: 10px 25px;
+    width: calc(100vw - 50px);
+  }
 `;

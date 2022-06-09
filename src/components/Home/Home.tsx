@@ -135,7 +135,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
           <Grid
             className="Grid custom-scroll-horiz"
             columnCount={moviesTopFiltered.length >= colResp ? colResp : moviesTopFiltered.length}
-            columnWidth={bounds?.width / colResp - 7}
+            columnWidth={bounds?.width / colResp - 9}
             height={520}
             rowCount={moviesTopFiltered.length > 4 ? moviesTopFiltered.length / colResp : 1}
             rowHeight={250}
@@ -159,7 +159,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         <Grid
           className="Grid custom-scroll-horiz"
           columnCount={moviesNowPlayFiltered.length >= colResp ? colResp : moviesNowPlayFiltered.length}
-          columnWidth={bounds?.width / colResp - 7}
+          columnWidth={bounds?.width / colResp - 9}
           height={520}
           rowCount={moviesNowPlayFiltered.length > 4 ? moviesNowPlayFiltered.length / colResp : 1}
           rowHeight={250}
@@ -182,7 +182,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         <Grid
           className="Grid custom-scroll-horiz"
           columnCount={moviesUpFiltered.length >= colResp ? colResp : moviesUpFiltered.length}
-          columnWidth={bounds?.width / colResp - 7}
+          columnWidth={bounds?.width / colResp - 9}
           height={520}
           rowCount={moviesUpFiltered.length > 4 ? moviesUpFiltered.length / colResp : 1}
           rowHeight={250}
@@ -209,9 +209,18 @@ const SearchBarHM = styled(FormSearchBar)`
 
 const HomeBody = styled.div<cssProps>`
   margin-top: 32px;
+
+  @media (max-width: 991px) {
+    margin-top: 0px;
+  }
+
   h1 {
     margin-top: 25px;
     margin-bottom: 25px;
+
+    @media (max-width: 991px) {
+      margin: 25px 25px 25px 0px;
+    }
 
     &.h1_wo_margin {
       margin: 15px 0px;
