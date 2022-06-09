@@ -31,9 +31,9 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
   if (debug) console.log('Dashboard/render: ', location);
 
   return (
-    <Dash className="d-flex flex-column flex-lg-row">
+    <Dash className="d-flex flex-column flex-lg-row" color={color}>
       <Nav
-        className="d-flex flex-row flex-lg-column align-items-center justify-content-between"
+        className="navibar d-flex flex-row flex-lg-column align-items-center justify-content-between"
         color={color}
       >
         <img src={Logo} alt="logo" />
@@ -70,7 +70,19 @@ type dashCSSProps = {
   color: any;
 };
 
-const Dash = styled.div``;
+const Dash = styled.div<dashCSSProps>`
+  @media (max-width: 991px) {
+    &::before {
+      content: '';
+      background-color: ${({ color }) => color.black};
+      width: 100vw;
+      height: 33px;
+      position: fixed;
+      top: 0px;
+      z-index: 9;
+    }
+  }
+`;
 
 const Nav = styled.div<dashCSSProps>`
   width: 96px;
