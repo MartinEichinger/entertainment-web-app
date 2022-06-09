@@ -80,24 +80,17 @@ const Nav = styled.div<dashCSSProps>`
   background: ${({ color }) => color.lightBlack} 0% 0% no-repeat padding-box;
   opacity: 1;
   border-radius: 20px;
-  //position: fixed;
-
-  img {
-    width: 32px;
-    height: 26px;
-    margin-bottom: 55px;
-  }
 
   @media (max-width: 991px) {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
     height: 96px;
     width: calc(100vw - 50px);
     margin: 23px 25px;
     padding: 24px;
     border-radius: 10px;
-
-    img {
-      margin-bottom: 0px !important;
-    }
   }
 
   @media (max-width: 575px) {
@@ -105,8 +98,18 @@ const Nav = styled.div<dashCSSProps>`
     margin: 0px;
     padding: 16px;
     border-radius: 0px;
+  }
 
-    img {
+  img {
+    width: 32px;
+    height: 26px;
+    margin-bottom: 55px;
+
+    @media (max-width: 991px) {
+      margin-bottom: 0px !important;
+    }
+
+    @media (max-width: 575px) {
       width: 25px;
       height: 20px;
     }
@@ -193,12 +196,12 @@ const Boards = styled.div`
   position: relative;
 
   @media (max-width: 991px) {
-    margin: 10px 25px;
+    margin: 152px 25px 10px;
     width: calc(100vw - 50px);
   }
 
   @media (max-width: 575px) {
-    margin: 10px 16px;
+    margin: 129px 16px 10px;
     width: calc(100vw - 32px);
   }
 `;

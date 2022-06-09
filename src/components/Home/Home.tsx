@@ -205,6 +205,14 @@ type cssProps = {
 const SearchBarHM = styled(FormSearchBar)`
   max-width: 1184px;
   width: calc(100vw - 256px);
+
+  @media (max-width: 991px) {
+    width: calc(100vw - 57px);
+  }
+
+  @media (max-width: 575px) {
+    width: calc(100vw - 57px);
+  }
 `;
 
 const HomeBody = styled.div<cssProps>`
