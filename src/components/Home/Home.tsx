@@ -135,7 +135,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
           <Grid
             className="Grid custom-scroll-horiz"
             columnCount={moviesTopFiltered.length >= colResp ? colResp : moviesTopFiltered.length}
-            columnWidth={bounds?.width / colResp - 9}
+            columnWidth={(bounds?.width - 18) / colResp}
             height={520}
             rowCount={moviesTopFiltered.length > 4 ? moviesTopFiltered.length / colResp : 1}
             rowHeight={250}
@@ -159,7 +159,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         <Grid
           className="Grid custom-scroll-horiz"
           columnCount={moviesNowPlayFiltered.length >= colResp ? colResp : moviesNowPlayFiltered.length}
-          columnWidth={bounds?.width / colResp - 9}
+          columnWidth={(bounds?.width - 18) / colResp}
           height={520}
           rowCount={moviesNowPlayFiltered.length > 4 ? moviesNowPlayFiltered.length / colResp : 1}
           rowHeight={250}
@@ -182,7 +182,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         <Grid
           className="Grid custom-scroll-horiz"
           columnCount={moviesUpFiltered.length >= colResp ? colResp : moviesUpFiltered.length}
-          columnWidth={bounds?.width / colResp - 9}
+          columnWidth={(bounds?.width - 18) / colResp}
           height={520}
           rowCount={moviesUpFiltered.length > 4 ? moviesUpFiltered.length / colResp : 1}
           rowHeight={250}
@@ -220,6 +220,10 @@ const HomeBody = styled.div<cssProps>`
 
     @media (max-width: 991px) {
       margin: 25px 25px 25px 0px;
+    }
+
+    @media (max-width: 575px) {
+      margin: 16px 16px 16px 0px;
     }
 
     &.h1_wo_margin {

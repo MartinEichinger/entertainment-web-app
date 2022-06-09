@@ -82,10 +82,17 @@ const Nav = styled.div<dashCSSProps>`
   border-radius: 20px;
   //position: fixed;
 
+  img {
+    width: 32px;
+    height: 26px;
+    margin-bottom: 55px;
+  }
+
   @media (max-width: 991px) {
     height: 96px;
     width: calc(100vw - 50px);
     margin: 23px 25px;
+    padding: 24px;
     border-radius: 10px;
 
     img {
@@ -93,24 +100,38 @@ const Nav = styled.div<dashCSSProps>`
     }
   }
 
-  img {
-    width: 32px;
-    height: 26px;
-    margin-bottom: 55px;
+  @media (max-width: 575px) {
+    width: 100vw;
+    margin: 0px;
+    padding: 16px;
+    border-radius: 0px;
+
+    img {
+      width: 25px;
+      height: 20px;
+    }
   }
 
   .avatar {
     border: 1px solid white;
     border-radius: 50%;
+    line-height: 1;
 
     img {
-      height: 32px;
+      height: 30px;
+      width: 30px;
       margin-bottom: 0px;
+
+      @media (max-width: 575px) {
+        height: 22px;
+        width: 22px;
+      }
     }
   }
 
   a {
     text-decoration: none;
+    line-height: 1px;
 
     svg {
       fill: ${({ color }) => color.greyishBlue};
@@ -135,10 +156,23 @@ const Nav = styled.div<dashCSSProps>`
     border-radius: 4px;
     cursor: pointer;
 
+    @media (max-width: 991px) {
+      padding: 4px 16px;
+    }
+
+    @media (max-width: 575px) {
+      padding: 4px 12px;
+    }
+
     img {
       height: 20px;
       width: 20px;
       margin-bottom: 0px;
+
+      @media (max-width: 575px) {
+        height: 16px;
+        width: 16px;
+      }
     }
 
     p {
@@ -161,5 +195,10 @@ const Boards = styled.div`
   @media (max-width: 991px) {
     margin: 10px 25px;
     width: calc(100vw - 50px);
+  }
+
+  @media (max-width: 575px) {
+    margin: 10px 16px;
+    width: calc(100vw - 32px);
   }
 `;
