@@ -6,7 +6,10 @@ const debug = true;
 const removeURL = process.env.REACT_APP_STATIC_REMOVE;
 
 interface movieState {
-  loading: boolean;
+  loadingNowPlaying: boolean;
+  loadingPopular: boolean;
+  loadingTopRated: boolean;
+  loadingUpcoming: boolean;
   nowPlayingMovies: any[] | IMovies[];
   popularMovies: any[] | IMovies[];
   topRatedMovies: any[] | IMovies[];
@@ -18,9 +21,16 @@ interface payloadProps {
   type: string;
 }
 
+interface payloadBeginProps {
+  type: string;
+}
+
 // initial state
 const initialState: movieState = {
-  loading: false,
+  loadingNowPlaying: false,
+  loadingPopular: false,
+  loadingTopRated: false,
+  loadingUpcoming: false,
   nowPlayingMovies: [],
   popularMovies: [],
   topRatedMovies: [],
@@ -33,17 +43,25 @@ export const slice = createSlice({
   initialState,
   reducers: {
     // onStart
-    moviesRequested: (state) => {
-      state.loading = true;
+    moviesRequested: (state, action: PayloadAction<payloadBeginProps>) => {
+      if (action.payload.type === 'nowPlaying') {
+        state.loadingNowPlaying = true;
+      } else if (action.payload.type === 'popular') {
+        state.loadingPopular = true;
+      } else if (action.payload.type === 'topRated') {
+        state.loadingTopRated = true;
+      } else if (action.payload.type === 'upcoming') {
+        state.loadingUpcoming = true;
+      }
     },
     movieUpdateStart: (state) => {
-      state.loading = true;
+      state.loadingPopular = true;
     },
     movieCreateStart: (state) => {
-      state.loading = true;
+      state.loadingPopular = true;
     },
     movieDeleteStart: (state) => {
-      state.loading = true;
+      state.loadingPopular = true;
     },
 
     // onSuccess
@@ -52,26 +70,29 @@ export const slice = createSlice({
       var addObj = action.payload.movies;
       if (action.payload.type === 'nowPlaying') {
         state.nowPlayingMovies = addObj;
+        state.loadingNowPlaying = false;
       } else if (action.payload.type === 'popular') {
         state.popularMovies = addObj;
+        state.loadingPopular = false;
       } else if (action.payload.type === 'topRated') {
         state.topRatedMovies = addObj;
+        state.loadingTopRated = false;
       } else if (action.payload.type === 'upcoming') {
         state.upcomingMovies = addObj;
+        state.loadingUpcoming = false;
       }
-      state.loading = false;
     },
     movieUpdated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movy/movyUpdated: ', action.payload);
       var id = action.payload.id;
       state.nowPlayingMovies[id - 1] = action.payload;
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieErrorUpdated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movy/movyErrorUpdated: ', action.payload);
       var id = action.payload.id;
       state.nowPlayingMovies[id - 1] = action.payload;
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieCreated: (state, action: PayloadAction<IMovies>) => {
       if (debug) console.log('movie/movieCreated: ', action.payload);
@@ -81,7 +102,7 @@ export const slice = createSlice({
       let compArr = [...state.nowPlayingMovies, addObj];
       state.nowPlayingMovies = compArr;
 
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieDeleted: (state, action: PayloadAction<IMovies[]>) => {
       if (debug) console.log('movie/movieDeleted: ', action.payload);
@@ -91,16 +112,16 @@ export const slice = createSlice({
 
     // onError
     moviesRequestFailed: (state) => {
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieUpdateFailed: (state) => {
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieCreateFailed: (state) => {
-      state.loading = false;
+      state.loadingPopular = false;
     },
     movieDeleteFailed: (state) => {
-      state.loading = false;
+      state.loadingPopular = false;
     },
   },
 });

@@ -49,19 +49,19 @@ export default function App() {
 
   useEffect(() => {
     if (debug) console.log('App/useEffect');
-    dispatch(moviesRequested());
+    dispatch(moviesRequested({ type: 'nowPlaying' }));
     getNowPlayingMovies().then((movies) => {
       dispatch(moviesReceived({ movies: movies, type: 'nowPlaying' }));
     });
-    dispatch(moviesRequested());
+    dispatch(moviesRequested({ type: 'popular' }));
     getPopularMovies().then((movies) => {
       dispatch(moviesReceived({ movies: movies, type: 'popular' }));
     });
-    dispatch(moviesRequested());
+    dispatch(moviesRequested({ type: 'topRated' }));
     getTopRatedMovies().then((movies) => {
       dispatch(moviesReceived({ movies: movies, type: 'topRated' }));
     });
-    dispatch(moviesRequested());
+    dispatch(moviesRequested({ type: 'upcoming' }));
     getUpcomingMovies().then((movies) => {
       dispatch(moviesReceived({ movies: movies, type: 'upcoming' }));
     });

@@ -76,7 +76,7 @@ body {
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: rgba(90, 105, 143, 0.5);
+      background: rgba(90, 105, 143, 1);
     }
   }
 
@@ -102,7 +102,7 @@ body {
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: $lightBlack;
+      background: rgba(90, 105, 143, 1);
     }
   }
 }

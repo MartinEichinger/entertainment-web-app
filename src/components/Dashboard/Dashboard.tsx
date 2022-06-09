@@ -25,15 +25,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ color }) => {
   const debug = true;
-  const dispatch = useAppDispatch();
   let location = useLocation();
-
-  /*   useEffect(() => {
-    if (debug) console.log('Dashboard/useEffect');
-    getMovies().then((movies) => {
-      dispatch(moviesReceived(movies));
-    });
-  }); */
 
   if (debug) console.log('Dashboard/render: ', location);
 
@@ -79,6 +71,7 @@ const Nav = styled.div<dashCSSProps>`
   background: ${({ color }) => color.lightBlack} 0% 0% no-repeat padding-box;
   opacity: 1;
   border-radius: 20px;
+  //position: fixed;
 
   img {
     width: 32px;
@@ -132,5 +125,6 @@ const Nav = styled.div<dashCSSProps>`
 const Boards = styled.div`
   margin: 32px 0px 0px 4px;
   width: 100%;
-  overflow: scroll-y;
+  position: relative;
+  //left: calc(100vw - 1440px + 160px);
 `;

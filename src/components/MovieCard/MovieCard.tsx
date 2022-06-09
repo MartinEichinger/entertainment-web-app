@@ -4,6 +4,7 @@ import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.
 import oval from '../../images/Oval.png';
 import { ReactComponent as Movie } from '../../images/icon-category-movie.svg';
 import { ReactComponent as TV } from '../../images/icon-category-tv.svg';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 interface MovieCardProps {
   img: string;
@@ -14,22 +15,26 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
   return (
-    <MovieCardBody className={className + ' d-flex flex-column'} color={color}>
+    <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
       <div className="thumb">
-        <img src={img} alt="" />
-        <div className="bookmark">{data.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}</div>
-      </div>
-      <div className="props d-flex flex-row align-items-center">
-        <p className="light">{data.year}</p>
-        <img src={oval} alt="Point" />
-        <div className="d-flex flex-row align-items-center">
-          {data.category === 'Movie' ? <MovieMC /> : <TVMC />}
-          <p className="light">{data.category}</p>
+        <img src={img} alt="logo" />
+        <div className="bookmark d-flex flex-row justify-content-center align-items-center">
+          {data.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
-        <img src={oval} alt="Point" />
-        <p className="light">{data.rating}</p>
       </div>
-      <h4>{data.title}</h4>
+      <div className="descr d-flex flex-column">
+        <div className="props d-flex flex-row align-items-center">
+          <p className="light">{data.year}</p>
+          <img src={oval} alt="Point" />
+          <div className="d-flex flex-row align-items-center">
+            {data.category === 'Movie' ? <MovieMC /> : <TVMC />}
+            <p className="light">{data.category}</p>
+          </div>
+          <img src={oval} alt="Point" />
+          <p className="light">{data.rating}</p>
+        </div>
+        <h4>{data.title}</h4>
+      </div>
     </MovieCardBody>
   );
 };
@@ -51,6 +56,8 @@ const TVMC = styled(TV)`
 const MovieCardBody = styled.div<cssProp>`
   margin-bottom: 32px;
   min-width: 200px;
+  position: relative;
+  top: 0px;
 
   .thumb {
     margin-bottom: 8px;
@@ -71,22 +78,27 @@ const MovieCardBody = styled.div<cssProp>`
       border-radius: 50%;
       right: 5px;
       top: 5px;
-      text-align: center;
-      padding-top: 3px;
+      //text-align: center;
+      //padding-top: 3px;
       background-color: ${({ color }) => color.grey50};
+      cursor: pointer;
     }
   }
 
-  .props {
-    margin-bottom: 5px;
-    p {
-      margin-right: 8px;
-    }
+  .descr {
+    position: relative;
 
-    img {
-      width: 3px;
-      height: 3px;
-      margin-right: 8px;
+    .props {
+      margin-bottom: 5px;
+      p {
+        margin-right: 8px;
+      }
+
+      img {
+        width: 3px;
+        height: 3px;
+        margin-right: 8px;
+      }
     }
   }
 `;

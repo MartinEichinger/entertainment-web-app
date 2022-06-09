@@ -17,7 +17,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  const debug = false;
+  const debug = true;
   let moviesNowPlay: IMovies[] = useAppSelector((state) => state.movies.nowPlayingMovies);
   let moviesPop: IMovies[] = useAppSelector((state) => state.movies.popularMovies);
   let moviesTop: IMovies[] = useAppSelector((state) => state.movies.topRatedMovies);
@@ -76,12 +76,9 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     data: IMovies[];
   }) => {
     {
-      if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
+      console.log('col/row: ', columnIndex, rowIndex);
       let item = data[rowIndex * 4 + columnIndex];
-      let img =
-        item.thumbnail.regular.large.search('w500null') > -1
-          ? '/no-image-available.jpg'
-          : item.thumbnail.regular.large;
+      let img = item.thumbnail.regular.large;
       return (
         <div style={style}>
           <MovieCardR img={img} color={color} data={item} />;
@@ -99,32 +96,28 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         setValue={setVal}
         placeholder="Search for movies or TV series"
       />
-      <h1 className="d-flex flex-row align-items-center">
-        Popular<span className="badge badge-light">{moviesPopFiltered.length}</span>
-      </h1>
+      <h1>Popular</h1>
       {loadStatusPop === true ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       ) : null}
-      <HorizScrollSec className="d-flex flex-row justify-content-between" color={color}>
-        <Grid
-          className="GridHoriz custom-scroll-vert"
-          columnCount={moviesPopFiltered.length}
-          columnWidth={480}
-          height={260}
-          rowCount={1}
-          rowHeight={330}
-          width={bounds?.width}
-          itemData={moviesPopFiltered}
-        >
-          {Cell}
-        </Grid>
-      </HorizScrollSec>
+      <LazyLoadComponent>
+        <SimpleBarHMH forceVisible="x" autoHide={false}>
+          <Trending className="d-flex flex-row justify-content-between" color={color}>
+            {moviesPopFiltered.length > 0
+              ? (moviesPopFiltered as IMovies[])?.map((item, i) => {
+                  let img: string = '';
+                  if (item.isTrending) img = item.thumbnail.trending.large;
+                  if (item.isTrending) return <MovieCardT img={img} color={color} data={item} key={i} />;
+                  return null;
+                })
+              : null}
+          </Trending>
+        </SimpleBarHMH>
+      </LazyLoadComponent>
 
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        TopRated<span className="badge badge-light">{moviesTopFiltered.length}</span>
-      </h1>
+      <h1 className="h1_wo_margin">TopRated</h1>
       {loadStatusTop === true ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
@@ -133,11 +126,11 @@ const Home: React.FC<HomeProps> = ({ color }) => {
       <div ref={ref}>
         <Recommended color={color}>
           <Grid
-            className="Grid custom-scroll-horiz"
-            columnCount={moviesTopFiltered.length >= colResp ? colResp : moviesTopFiltered.length}
+            className="Grid"
+            columnCount={colResp}
             columnWidth={bounds?.width / colResp - 7}
             height={520}
-            rowCount={moviesTopFiltered.length > 4 ? moviesTopFiltered.length / colResp : 1}
+            rowCount={moviesTopFiltered.length / colResp}
             rowHeight={250}
             width={bounds?.width}
             itemData={moviesTopFiltered}
@@ -147,9 +140,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         </Recommended>
       </div>
 
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        Now Playing<span className="badge badge-light">{moviesNowPlayFiltered.length}</span>
-      </h1>
+      <h1 className="h1_wo_margin">Now Playing</h1>
       {loadStatusNowPlay === true ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
@@ -157,11 +148,11 @@ const Home: React.FC<HomeProps> = ({ color }) => {
       ) : null}
       <Recommended color={color}>
         <Grid
-          className="Grid custom-scroll-horiz"
-          columnCount={moviesNowPlayFiltered.length >= colResp ? colResp : moviesNowPlayFiltered.length}
+          className="Grid"
+          columnCount={colResp}
           columnWidth={bounds?.width / colResp - 7}
           height={520}
-          rowCount={moviesNowPlayFiltered.length > 4 ? moviesNowPlayFiltered.length / colResp : 1}
+          rowCount={moviesNowPlayFiltered.length / colResp}
           rowHeight={250}
           width={bounds?.width}
           itemData={moviesNowPlayFiltered}
@@ -170,9 +161,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         </Grid>
       </Recommended>
 
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        Upcoming<span className="badge badge-light">{moviesUpFiltered.length}</span>
-      </h1>
+      <h1 className="h1_wo_margin">Upcoming</h1>
       {loadStatusUp === true ? (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading...</span>
@@ -180,11 +169,11 @@ const Home: React.FC<HomeProps> = ({ color }) => {
       ) : null}
       <Recommended className="" color={color}>
         <Grid
-          className="Grid custom-scroll-horiz"
-          columnCount={moviesUpFiltered.length >= colResp ? colResp : moviesUpFiltered.length}
+          className="Grid"
+          columnCount={colResp}
           columnWidth={bounds?.width / colResp - 7}
           height={520}
-          rowCount={moviesUpFiltered.length > 4 ? moviesUpFiltered.length / colResp : 1}
+          rowCount={moviesUpFiltered.length / colResp}
           rowHeight={250}
           width={bounds?.width}
           itemData={moviesUpFiltered}
@@ -207,6 +196,30 @@ const SearchBarHM = styled(FormSearchBar)`
   width: calc(100vw - 256px);
 `;
 
+const SimpleBarHMH = styled(SimpleBar)`
+  max-width: 1240px;
+  width: calc(100vw - 200px);
+  .simplebar-track {
+    bottom: 300px;
+    right: 0px;
+  }
+
+  .simplebar-scrollbar.simplebar-visible:before {
+    border: 1px solid white;
+  }
+`;
+
+const SimpleBarHM = styled(SimpleBar)`
+  height: 520px; //calc(100vh - 590px);
+  .simplebar-track {
+    right: 5px;
+  }
+
+  .simplebar-scrollbar.simplebar-visible:before {
+    border: 1px solid white;
+  }
+`;
+
 const HomeBody = styled.div<cssProps>`
   margin-top: 32px;
   h1 {
@@ -218,61 +231,41 @@ const HomeBody = styled.div<cssProps>`
       padding: 10px 10px;
       border-radius: 10px;
       background-color: ${({ color }) => color.greyishBlue};
-
-      .badge {
-        background-color: ${({ color }) => color.lightBlack};
-      }
-    }
-
-    .badge {
-      margin-left: 15px;
-      font-size: 12px;
-      background-color: ${({ color }) => color.greyishBlue};
     }
   }
 `;
 
-const HorizScrollSec = styled.div`
+const Trending = styled.div`
   margin-bottom: 25px;
+`;
 
-  .GridHoriz {
-    overflow-y: hidden !important;
-  }
+const MovieCardT = styled(MovieCard)`
+  margin-bottom: 4px;
+  margin-right: 40px;
+  min-width: 470px;
 
-  .movie-card-body {
-    margin-bottom: 4px;
-    margin-right: 40px;
-    min-width: 470px;
+  .thumb {
+    max-width: 470px;
+    min-width: 400px;
+    height: 230px;
 
-    .thumb {
+    img {
       max-width: 470px;
       min-width: 400px;
-      height: 230px;
-
-      img {
-        max-width: 470px;
-        min-width: 400px;
-        height: 230px; //174
-      }
+      height: 230px; //174
     }
+  }
 
-    .descr {
-      top: -85px;
-      padding-left: 24px;
-      padding-top: 25px;
-      padding-bottom: 6px;
-      //background-color: rgba(0, 0, 0, 0.5);
-      background-image: linear-gradient(rgba(16, 20, 30, 0.1), rgba(6, 10, 20, 1));
-      border-radius: 0px 0px 8px 8px;
+  .props {
+    position: relative;
+    top: -70px;
+    margin-left: 24px;
+  }
 
-      .props {
-        position: relative;
-      }
-
-      h4 {
-        position: relative;
-      }
-    }
+  h4 {
+    position: relative;
+    top: -70px;
+    margin-left: 24px;
   }
 `;
 
@@ -296,47 +289,9 @@ const Recommended = styled.div`
       }
     }
   }
-
-  .GridHoriz {
-    div {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: between;
-      //margin-right: 5px;
-
-      div {
-        margin-right: 20px;
-      }
-    }
-  }
 `;
 
 const MovieCardR = styled(MovieCard)`
   margin-right: 4px;
   margin-bottom: 32px;
 `;
-
-/* const SimpleBarHMH = styled(SimpleBar)`
-  max-width: 1240px;
-  width: calc(100vw - 200px);
-  .simplebar-track {
-    bottom: 300px;
-    right: 0px;
-  }
-
-  .simplebar-scrollbar.simplebar-visible:before {
-    border: 1px solid white;
-  }
-`;
-
-const SimpleBarHM = styled(SimpleBar)`
-  height: 520px; //calc(100vh - 590px);
-  .simplebar-track {
-    right: 5px;
-  }
-
-  .simplebar-scrollbar.simplebar-visible:before {
-    border: 1px solid white;
-  }
-`; */

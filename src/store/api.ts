@@ -3,7 +3,7 @@ import React from 'react';
 import { useAppDispatch } from './hooks';
 import { moviesReceived } from './movieSlices';
 
-const debug = true;
+const debug = false;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
 const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
@@ -31,8 +31,10 @@ export interface IMovies {
 
 async function getMovies(url: string, method: string, cat: string, wPage: boolean): Promise<IMovies[]> {
   let arr: IMovies[] = [];
-  let len = wPage ? 50 : 1;
+  const maxLen = 500;
+  let len = wPage ? maxLen : 1;
 
+  console.log(url, cat);
   for (let i = 1; i <= len; i++) {
     let searchUrl = wPage
       ? baseURL + url + '/' + cat + '?' + apiKey + '&page=' + i.toString()
@@ -44,7 +46,9 @@ async function getMovies(url: string, method: string, cat: string, wPage: boolea
     });
 
     let res = (await response).data;
-    //if (debug) console.log('api/res: ', res);
+    if (res.total_pages < maxLen) len = res.total_pages;
+
+    if (debug) console.log('api/res: ', res, len);
 
     let arrTemp: IMovies[] = res.results.map((item: any) => {
       //if (debug) console.log('api-detail: ', item);
