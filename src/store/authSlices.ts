@@ -120,7 +120,7 @@ export const signUp =
   ({ email, password }: IAuthData): AppThunk =>
   async (dispatch) => {
     let method = 'POST';
-    let url = `http://audiophile.edmadd.eu/?rest_route=/simple-jwt-login/v1/users&email=${email}&password=${password}&authkey=${authkey}`;
+    let url = `https://audiophile.edmadd.eu/?rest_route=/simple-jwt-login/v1/users&email=${email}&password=${password}&authkey=${authkey}`;
 
     return axios
       .request({
