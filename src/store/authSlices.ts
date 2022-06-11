@@ -38,7 +38,6 @@ export const slice = createSlice({
     },
 
     authStatus: (state) => {
-      console.log('auth/authStatus', state);
       if (localStorage.getItem('token') != null) {
         const actTime = new Date(new Date().getTime());
         const storTime = new Date(localStorage.getItem('expirationDate') as string);

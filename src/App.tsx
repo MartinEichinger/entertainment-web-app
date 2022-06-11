@@ -67,7 +67,7 @@ export default function App() {
     });
   });
 
-  console.log('App/render');
+  if (debug) console.log('App/render');
 
   return (
     <>
