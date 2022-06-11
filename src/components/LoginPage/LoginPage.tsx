@@ -14,7 +14,7 @@ interface LoginProps {
 const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   let navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const debug = true;
+  const debug = false;
 
   // internal states
   const [email, setEmail] = useState('');

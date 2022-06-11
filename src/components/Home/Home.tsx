@@ -15,7 +15,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  const debug = true;
+  const debug = false;
   let moviesNowPlay: IMovies[] = useAppSelector((state) => state.movies.nowPlayingMovies);
   let moviesPop: IMovies[] = useAppSelector((state) => state.movies.popularMovies);
   let moviesTop: IMovies[] = useAppSelector((state) => state.movies.topRatedMovies);

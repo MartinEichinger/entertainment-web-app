@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from './store';
 import axios from 'axios';
 
-const debug = true;
+const debug = false;
 const authkey = process.env.REACT_APP_AUTH_KEY;
 
 interface authState {
