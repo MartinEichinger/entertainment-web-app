@@ -18,21 +18,21 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
       <div className="thumb">
         <img src={img} alt="logo" />
         <div className="bookmark d-flex flex-row justify-content-center align-items-center">
-          {data.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
+          {data?.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
       </div>
       <div className="descr d-flex flex-column">
         <div className="props d-flex flex-row align-items-center">
-          <p className="light">{data.year}</p>
+          <p className="light">{data?.year}</p>
           <img src={oval} alt="Point" />
           <div className="d-flex flex-row align-items-center">
-            {data.category === 'Movie' ? <MovieMC /> : <TVMC />}
-            <p className="light">{data.category}</p>
+            {data?.category === 'Movie' ? <MovieMC /> : <TVMC />}
+            <p className="light">{data?.category}</p>
           </div>
           <img src={oval} alt="Point" />
-          <p className="light">{data.rating}</p>
+          <p className="light">{data?.rating}</p>
         </div>
-        <h4>{data.title}</h4>
+        <h4>{data?.title}</h4>
       </div>
     </MovieCardBody>
   );
@@ -54,7 +54,9 @@ const TVMC = styled(TV)`
 
 const MovieCardBody = styled.div<cssProp>`
   margin-bottom: 32px;
-  min-width: 200px;
+  min-width: 240px;
+  max-width: 350px;
+  width: 100%;
   position: relative;
   top: 0px;
 

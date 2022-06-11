@@ -28,8 +28,8 @@ Users should be able to:
 - Navigate between Home, Movies, TV Series, and Bookmarked Shows pages
 - Add/Remove bookmarks from all movies and TV series
 - Search for relevant shows on all pages
-- Use a full-stack application
-- Use an auth flow
+- Use a full-stack application / get Movie, TV Series data from TMDB.com
+- Register / Login to application
 
 ### Screenshot
 
@@ -68,14 +68,15 @@ Users should be able to:
 - [React](https://reactjs.org/) - JS library
 - [React Redux] (https://react-redux.js.org) - A Predictable State Container for JS Apps
 - [React Router](https://v5.reactrouter.com/) - React Router Library
+- [React Window]j(https://react-window.now.sh/) - Render large lists using virtualization
 - [Styled Components](https://emotion.sh/) - Styled components with emotion.sh
 - [Typescript](https://www.typescriptlang.org/) - JS with syntax for types
 
 ### What I learned
 
 - Use Typescript together with React, React Router, React Redux and Styled Components
-- Auth workflow ....
-- Load data from ....
+- The auth workflow (Register / Login / Logout) is integrated in the react-redux store, with middleware for prompting .toasts in case of success or failure.
+- Load data from TMDB.com, over 30.000 movies.
 
 ### Continued development
 

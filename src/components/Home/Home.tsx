@@ -15,7 +15,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  const debug = false;
+  const debug = true;
   let moviesNowPlay: IMovies[] = useAppSelector((state) => state.movies.nowPlayingMovies);
   let moviesPop: IMovies[] = useAppSelector((state) => state.movies.popularMovies);
   let moviesTop: IMovies[] = useAppSelector((state) => state.movies.topRatedMovies);
@@ -57,10 +57,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     );
   }
 
-  if (debug) console.log('Home/render NowPlaying: ', moviesNowPlayFiltered, loadStatusNowPlay);
-  if (debug) console.log('Home/render Popular: ', moviesPopFiltered, loadStatusPop);
-  if (debug) console.log('Home/render TopRated: ', moviesTopFiltered, loadStatusTop);
-  if (debug) console.log('Home/render Upcoming: ', moviesUpFiltered, loadStatusUp);
+  let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;
 
   const Cell = ({
     columnIndex,
@@ -73,20 +70,47 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     style: CSSProperties;
     data: IMovies[];
   }) => {
-    if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
-    let item = data[rowIndex * 4 + columnIndex];
+    //if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
+    if (debug)
+      console.log('Home/Cell/ printLen vs availLen: ', rowIndex * colResp + columnIndex, data.length);
+    let idx = rowIndex * colResp + columnIndex;
+    let item = data[idx];
     let img =
-      item.thumbnail.regular.large.search('w500null') > -1
+      item?.thumbnail.regular.large.search('w500null') > -1
         ? '/no-image-available.jpg'
-        : item.thumbnail.regular.large;
+        : item?.thumbnail.regular.large;
     return (
-      <div style={style}>
-        <MovieCardR img={img} color={color} data={item} />;
-      </div>
+      <>
+        {idx < data.length && (
+          <div style={style}>
+            <MovieCardR img={img} color={color} data={item} />
+          </div>
+        )}
+      </>
     );
   };
 
-  let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;
+  if (debug)
+    console.log(
+      'Home/render NowPlaying: ',
+      moviesNowPlayFiltered,
+      loadStatusNowPlay,
+      colResp,
+      bounds?.width
+    );
+  if (debug)
+    console.log('Home/render Popular: ', moviesPopFiltered, loadStatusPop, colResp, bounds?.width);
+  if (debug)
+    console.log(
+      'Home/render TopRated: ',
+      moviesTopFiltered,
+      loadStatusTop,
+      colResp,
+      moviesTopFiltered.length > colResp ? moviesTopFiltered.length / colResp : 1
+    );
+  if (debug)
+    console.log('Home/render Upcoming: ', moviesUpFiltered, loadStatusUp, colResp, bounds?.width);
+
   return (
     <HomeBody color={color}>
       <SearchBarHM
@@ -133,7 +157,9 @@ const Home: React.FC<HomeProps> = ({ color }) => {
             columnCount={moviesTopFiltered.length >= colResp ? colResp : moviesTopFiltered.length}
             columnWidth={(bounds?.width - 18) / colResp}
             height={520}
-            rowCount={moviesTopFiltered.length > 4 ? moviesTopFiltered.length / colResp : 1}
+            rowCount={
+              moviesTopFiltered.length > colResp ? Math.ceil(moviesTopFiltered.length / colResp) : 1
+            }
             rowHeight={250}
             width={bounds?.width}
             itemData={moviesTopFiltered}
