@@ -42,7 +42,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const debug = true;
+  const debug = false;
   const dispatch = useAppDispatch();
   dispatch(authStatus());
   var auth_token: string | null = useAppSelector((state) => state.auth.token);
@@ -70,36 +70,38 @@ export default function App() {
   console.log('App/render');
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          auth_token !== null ? (
-            <Navigate to="/dashboard/home" replace={true} />
-          ) : (
-            <LoginPage color={color} />
-          )
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          auth_token !== null ? (
-            <Navigate to="/dashboard/home" replace={true} />
-          ) : (
-            <LoginPage signup={true} color={color} />
-          )
-        }
-      />
-      <Route
-        path="dashboard/*"
-        element={
-          <RequireAuth>
-            <Dashboard color={color} />
-          </RequireAuth>
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace={true} />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            auth_token !== null ? (
+              <Navigate to="/dashboard/home" replace={true} />
+            ) : (
+              <LoginPage color={color} />
+            )
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            auth_token !== null ? (
+              <Navigate to="/dashboard/home" replace={true} />
+            ) : (
+              <LoginPage signup={true} color={color} />
+            )
+          }
+        />
+        <Route
+          path="dashboard/*"
+          element={
+            <RequireAuth>
+              <Dashboard color={color} />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace={true} />} />
+      </Routes>
+    </>
   );
 }

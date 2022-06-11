@@ -1,15 +1,18 @@
 [
   {
-    "username": "Martin Eichinger",
+    "user_email": "m.eichinger@silverlightning.com",
     "password": "123brtl"
   },
   {
-    "username": "Lennert Streng",
+    "user_email": "l.streng@mail.com",
     "password": "123brtl"
   },
   {
-    "username": "Rosa Rot",
+    "user_email": "r.r@rot.de",
     "password": "123brtl"
   },
-  { "username": "Martin", "password": "123brtl" }
+  {
+    "user_email": "Martin@edmadd.eu",
+    "password": "123brtl"
+  }
 ]

@@ -71,11 +71,6 @@ interface CustomColores {
   colores: any;
 }
 
-const SearchFSB = styled(Search)`
-  width: 32px;
-  height: 32px;
-`;
-
 const FormGroup = styled.div<CustomColores>`
   margin-left: 24px;
 

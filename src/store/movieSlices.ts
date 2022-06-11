@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { IMovies } from './api';
 
-const debug = true;
-//const baseURL = process.env.REACT_APP_BACKEND_PATH;
-const removeURL = process.env.REACT_APP_STATIC_REMOVE;
+const debug = false;
 
 interface movieState {
   loadingNowPlaying: boolean;

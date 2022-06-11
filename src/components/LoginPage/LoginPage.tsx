@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate, Link } from 'react-router-dom';
-import { logInData, UserData } from '../../store/api';
 import { useAppDispatch } from '../../store/hooks';
-import { authReceived } from '../../store/authSlices';
+import { logIn, signUp } from '../../store/authSlices';
 import FormTextField from '../FormTextField/FormTextField';
 import Logo from '../../images/logo.svg';
 
@@ -15,30 +14,37 @@ interface LoginProps {
 const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   let navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const debug = false;
+  const debug = true;
 
   // internal states
-  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
-  const [error, setError] = useState({ eLogin: 2 as boolean | number, ePwd: 2 as boolean | number });
+  const [emailUp, setEmailUp] = useState('');
+  const [pwd2Up, setPwd2Up] = useState('');
+  const [pwdUp, setPwdUp] = useState('');
+  const [error, setError] = useState({
+    eEmail: 2 as boolean | number,
+    ePwd: 2 as boolean | number,
+    ePwd2Up: 2 as boolean | number,
+    ePwdUp: 2 as boolean | number,
+    eEmailUp: 2 as boolean | number,
+  });
 
-  const handleSubmit = () => {
-    logInData().then((users: UserData[]) => {
-      let data = { username: null as string | null, token: null as string | null };
+  const handleLogin = () => {
+    if (debug) console.log('LoginPage/handleLogin: ', email, pwd);
+    dispatch(logIn({ email: email, password: pwd }));
+    navigate('/', { replace: true });
+    setEmail('');
+    setPwd('');
+  };
 
-      let index = users.findIndex((user) => {
-        return user.username === login;
-      });
-
-      console.log(index);
-      if (users[index].password === pwd) {
-        console.log('Login worked');
-        data.token = 'really difficult token';
-        data.username = login;
-      }
-      if (data.token !== null) dispatch(authReceived(data));
-      if (data?.token !== null) navigate('/dashboard/home/onboarding', { replace: true });
-    });
+  const handleSignUp = () => {
+    if (debug) console.log('LoginPage/handleSignUp', emailUp, pwdUp);
+    dispatch(signUp({ email: emailUp, password: pwdUp }));
+    navigate('/', { replace: true });
+    setEmailUp('');
+    setPwdUp('');
+    setPwd2Up('');
   };
 
   if (debug) console.log('LoginPage', color);
@@ -55,10 +61,10 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
               color={color}
               form_title=""
               placeholder="Email address"
-              value={login}
-              error={error.eLogin}
-              setValue={setLogin}
-              setError={(val: boolean) => setError({ eLogin: val, ePwd: error.ePwd })}
+              value={email}
+              error={error.eEmail}
+              setValue={setEmail}
+              setError={(val: boolean) => setError({ ...error, eEmail: val })}
               required
             />
             <FormTextFieldLP
@@ -69,15 +75,15 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
               value={pwd}
               error={error.ePwd}
               setValue={setPwd}
-              setError={(val: boolean) => setError({ eLogin: error.eLogin, ePwd: val })}
+              setError={(val: boolean) => setError({ ...error, ePwd: val })}
               required
             />
 
             <Button
               type="submit"
-              onClick={handleSubmit}
+              onClick={handleLogin}
               disabled={
-                error.eLogin === true || error.ePwd === true || error.eLogin === 2 || error.ePwd === 2
+                error.eEmail === true || error.ePwd === true || error.eEmail === 2 || error.ePwd === 2
               }
               color={color}
             >
@@ -95,21 +101,62 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
 
         {signup === true && (
           <div className="form d-flex flex-column align-items-start">
-            <h1>Forgot your password</h1>
-            <h2>Request a password reminder</h2>
+            <h1>Sign Up</h1>
 
             <FormTextFieldLP
               color={color}
-              form_title="Email Address or Username"
-              value={''}
-              error={false}
-              setValue={setLogin}
+              form_title=""
+              placeholder="Email address"
+              value={emailUp}
+              error={error.eEmailUp}
+              setValue={setEmailUp}
+              setError={(val: boolean) => setError({ ...error, eEmailUp: val })}
+              required
             />
-            <div className="d-flex flex-row">
-              <Button type="submit" color={color}>
-                Submit
-              </Button>
-            </div>
+
+            <FormTextFieldLP
+              color={color}
+              form_title=""
+              placeholder="Password"
+              type="password"
+              value={pwdUp}
+              error={error.ePwdUp}
+              setValue={setPwdUp}
+              setError={(val: boolean) => setError({ ...error, ePwdUp: val })}
+              required
+            />
+
+            <FormTextFieldLP
+              color={color}
+              form_title=""
+              placeholder="Repeat password"
+              type="password"
+              value={pwd2Up}
+              error={error.ePwd2Up}
+              setValue={setPwd2Up}
+              setError={(val: boolean) => setError({ ...error, ePwd2Up: val })}
+              required
+            />
+
+            <Button
+              type="submit"
+              onClick={handleSignUp}
+              disabled={
+                error.eEmailUp === (true || 2) ||
+                error.ePwdUp === (true || 2) ||
+                error.ePwd2Up === (true || 2)
+              }
+              color={color}
+            >
+              Create an account
+            </Button>
+
+            <p>
+              Already have an account?
+              <Link className="link" to={'/'}>
+                Login
+              </Link>
+            </p>
           </div>
         )}
       </div>

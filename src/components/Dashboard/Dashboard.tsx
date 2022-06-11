@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import React from 'react';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks';
+import { logOut } from '../../store/authSlices';
 import styled from '@emotion/styled';
 import Home from '../Home/Home';
 import Movies from '../Movies/Movies';
@@ -25,42 +26,46 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ color }) => {
-  const debug = true;
+  const debug = false;
   let location = useLocation();
+  let navigate = useNavigate();
+  let dispatch = useAppDispatch();
 
   if (debug) console.log('Dashboard/render: ', location);
 
   return (
-    <Dash className="d-flex flex-column flex-lg-row" color={color}>
-      <Nav
-        className="navibar d-flex flex-row flex-lg-column align-items-center justify-content-between"
-        color={color}
-      >
-        <img src={Logo} alt="logo" />
-        <div className="link-items d-flex flex-row flex-lg-column align-items-center">
-          {navItems.map((item, i) => {
-            let active = location.pathname === item.link;
+    <>
+      <Dash className="d-flex flex-column flex-lg-row" color={color}>
+        <Nav
+          className="navibar d-flex flex-row flex-lg-column align-items-center justify-content-between"
+          color={color}
+        >
+          <img src={Logo} alt="logo" onClick={() => navigate('/', { replace: true })} />
+          <div className="link-items d-flex flex-row flex-lg-column align-items-center">
+            {navItems.map((item, i) => {
+              let active = location.pathname === item.link;
 
-            return (
-              <Link to={item.link} className={active ? 'nav-row active' : 'nav-row'} key={i}>
-                <item.icon />
-              </Link>
-            );
-          })}
-        </div>
-        <div className="avatar">
-          <img src={avatar} alt="Logo" />
-        </div>
-      </Nav>
-      <Boards>
-        <Routes>
-          <Route path="home" element={<Home color={color} />}></Route>
-          <Route path="movies" element={<Movies />}></Route>
-          <Route path="series" element={<Series />}></Route>
-          <Route path="bookmarked" element={<Bookmarked />}></Route>
-        </Routes>
-      </Boards>
-    </Dash>
+              return (
+                <Link to={item.link} className={active ? 'nav-row active' : 'nav-row'} key={i}>
+                  <item.icon />
+                </Link>
+              );
+            })}
+          </div>
+          <div className="avatar" onClick={() => dispatch(logOut())}>
+            <img src={avatar} alt="Logo" />
+          </div>
+        </Nav>
+        <Boards>
+          <Routes>
+            <Route path="home" element={<Home color={color} />}></Route>
+            <Route path="movies" element={<Movies />}></Route>
+            <Route path="series" element={<Series />}></Route>
+            <Route path="bookmarked" element={<Bookmarked />}></Route>
+          </Routes>
+        </Boards>
+      </Dash>
+    </>
   );
 };
 
@@ -131,6 +136,7 @@ const Nav = styled.div<dashCSSProps>`
     border: 1px solid white;
     border-radius: 50%;
     line-height: 1;
+    cursor: pointer;
 
     img {
       height: 30px;

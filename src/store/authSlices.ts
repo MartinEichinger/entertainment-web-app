@@ -1,18 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Auth } from './api';
+import { AppThunk } from './store';
+import axios from 'axios';
 
 const debug = true;
+const authkey = process.env.REACT_APP_AUTH_KEY;
 
 interface authState {
   loading?: boolean;
   token: string | null;
-  username: string | null;
+  user_email: string | null;
 }
+
+interface Auth {
+  token: string | null;
+  user_email: string | null;
+}
+
 // initial state
 const initialState: authState = {
   loading: false,
   token: null,
-  username: null,
+  user_email: null,
 };
 
 // create slice
@@ -26,7 +34,7 @@ export const slice = createSlice({
       localStorage.removeItem('username');
       localStorage.removeItem('expirationDate');
       state.token = null;
-      state.username = null;
+      state.user_email = null;
     },
 
     authStatus: (state) => {
@@ -36,7 +44,7 @@ export const slice = createSlice({
         const storTime = new Date(localStorage.getItem('expirationDate') as string);
         if (storTime.getTime() > actTime.getTime()) {
           state.token = localStorage.getItem('token');
-          state.username = localStorage.getItem('username');
+          state.user_email = localStorage.getItem('username');
         } else {
           localStorage.removeItem('token');
           localStorage.removeItem('username');
@@ -46,15 +54,15 @@ export const slice = createSlice({
     },
 
     authReceived: (state, action: PayloadAction<Auth>) => {
-      const { token, username } = action.payload;
+      const { token, user_email } = action.payload;
       state.token = token;
-      state.username = username;
+      state.user_email = user_email;
       state.loading = false;
 
       const expirationDate = new Date(new Date().getTime() + 3600 * 1000) as unknown;
 
       localStorage.setItem('token', token as string);
-      localStorage.setItem('username', username as string);
+      localStorage.setItem('user_email', user_email as string);
       localStorage.setItem('expirationDate', expirationDate as string);
     },
 
@@ -73,6 +81,64 @@ export default slice.reducer;
 
 // export actions
 export const { loggedOut, authStatus, authReceived, authRequested, authRequestFailed } = slice.actions;
+
+interface IAuthData {
+  email: string;
+  password: string;
+}
+
+export const logIn =
+  ({ email, password }: IAuthData): AppThunk =>
+  async (dispatch) => {
+    let method = 'POST';
+    let url = `http://audiophile.edmadd.eu/?rest_route=/simple-jwt-login/v1/auth&email=${email}&password=${password}&authkey=${authkey}`;
+
+    return axios
+      .request({
+        method: method,
+        url: url,
+      })
+      .then((res) => {
+        console.log('res:', res);
+        const user_email: string = email;
+        const jwt: string = res.data.data.jwt;
+
+        let data = { user_email: user_email, token: jwt };
+        dispatch(authReceived(data));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(authRequestFailed(err));
+      });
+  };
+
+export const logOut = (): AppThunk => async (dispatch) => {
+  dispatch(loggedOut());
+};
+
+export const signUp =
+  ({ email, password }: IAuthData): AppThunk =>
+  async (dispatch) => {
+    let method = 'POST';
+    let url = `http://audiophile.edmadd.eu/?rest_route=/simple-jwt-login/v1/users&email=${email}&password=${password}&authkey=${authkey}`;
+
+    return axios
+      .request({
+        method: method,
+        url: url,
+      })
+      .then((res) => {
+        console.log('res:', res);
+        const user_email = res.data.user.user_email;
+        const jwt = res.data.jwt;
+
+        let data = { user_email: user_email, token: jwt };
+        dispatch(authReceived(data));
+      })
+      .catch((err) => {
+        dispatch(authRequestFailed(err));
+      });
+  };
 
 // export action creators
 //const url = '/rest-auth/login/';

@@ -1,7 +1,4 @@
 import axios from 'axios';
-import React from 'react';
-import { useAppDispatch } from './hooks';
-import { moviesReceived } from './movieSlices';
 
 const debug = false;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
@@ -34,7 +31,7 @@ async function getMovies(url: string, method: string, cat: string, wPage: boolea
   const maxLen = 500;
   let len = wPage ? maxLen : 1;
 
-  console.log(url, cat);
+  //console.log(url, cat);
   for (let i = 1; i <= len; i++) {
     let searchUrl = wPage
       ? baseURL + url + '/' + cat + '?' + apiKey + '&page=' + i.toString()
@@ -82,7 +79,6 @@ async function getMovies(url: string, method: string, cat: string, wPage: boolea
 }
 
 // READ
-interface IProps {}
 
 export async function getNowPlayingMovies(): Promise<IMovies[]> {
   if (debug) console.log('movieSlice/getNowPlayingMovies');
@@ -132,22 +128,4 @@ export async function getUpcomingMovies(): Promise<IMovies[]> {
 
   const movies = await getMovies(url, method, cat, wPage);
   return movies;
-}
-
-// authSlices
-export interface Auth {
-  token: string | null;
-  username: string | null;
-}
-
-export interface UserData {
-  username: string;
-  password: string;
-}
-
-export async function logInData(): Promise<UserData[]> {
-  console.log('logInData');
-  const results = await fetch('/datauser.json');
-  const users = results.json();
-  return users;
 }

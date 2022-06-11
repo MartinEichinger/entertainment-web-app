@@ -3,10 +3,8 @@ import { useAppSelector } from '../../store/hooks';
 import { IMovies } from '../../store/api';
 import styled from '@emotion/styled';
 import MovieCard from '../MovieCard/MovieCard';
-import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import FormSearchBar from '../FormSearchBar/FormSearchBar';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { CSSProperties } from 'react';
 import * as React from 'react';
@@ -75,19 +73,17 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     style: CSSProperties;
     data: IMovies[];
   }) => {
-    {
-      if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
-      let item = data[rowIndex * 4 + columnIndex];
-      let img =
-        item.thumbnail.regular.large.search('w500null') > -1
-          ? '/no-image-available.jpg'
-          : item.thumbnail.regular.large;
-      return (
-        <div style={style}>
-          <MovieCardR img={img} color={color} data={item} />;
-        </div>
-      );
-    }
+    if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
+    let item = data[rowIndex * 4 + columnIndex];
+    let img =
+      item.thumbnail.regular.large.search('w500null') > -1
+        ? '/no-image-available.jpg'
+        : item.thumbnail.regular.large;
+    return (
+      <div style={style}>
+        <MovieCardR img={img} color={color} data={item} />;
+      </div>
+    );
   };
 
   let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;

@@ -4,7 +4,6 @@ import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.
 import oval from '../../images/Oval.png';
 import { ReactComponent as Movie } from '../../images/icon-category-movie.svg';
 import { ReactComponent as TV } from '../../images/icon-category-tv.svg';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 interface MovieCardProps {
   img: string;
