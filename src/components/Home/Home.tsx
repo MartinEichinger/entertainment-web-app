@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { IMovies } from '../../store/api';
+import { IMedias } from '../../store/mediaSlices';
 import styled from '@emotion/styled';
 import MovieCard from '../MovieCard/MovieCard';
 import 'simplebar-react/dist/simplebar.min.css';
@@ -8,26 +8,59 @@ import FormSearchBar from '../FormSearchBar/FormSearchBar';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { CSSProperties } from 'react';
 import * as React from 'react';
-import useMeasure from './useMeasure';
+import useMeasure from '../../helpers/useMeasure';
+import { formDataArr, mediaState } from '../../store/mediaSlices';
 
 interface HomeProps {
   color: any;
 }
 
+interface IDataProps {
+  popularMovies: any[] | IMedias[];
+  topRatedMovies: any[] | IMedias[];
+  nowPlayingMovies: any[] | IMedias[];
+  upcomingMovies: any[] | IMedias[];
+  popularTV: any[] | IMedias[];
+  topRatedTV: any[] | IMedias[];
+  airingTodayTV: any[] | IMedias[];
+  onTheAirTV: any[] | IMedias[];
+}
+
 const Home: React.FC<HomeProps> = ({ color }) => {
   const debug = false;
-  let moviesNowPlay: IMovies[] = useAppSelector((state) => state.movies.nowPlayingMovies);
-  let moviesPop: IMovies[] = useAppSelector((state) => state.movies.popularMovies);
-  let moviesTop: IMovies[] = useAppSelector((state) => state.movies.topRatedMovies);
-  let moviesUp: IMovies[] = useAppSelector((state) => state.movies.upcomingMovies);
-  let loadStatusNowPlay: boolean = useAppSelector((state) => state.movies.loadingNowPlaying);
-  let loadStatusPop: boolean = useAppSelector((state) => state.movies.loadingPopular);
-  let loadStatusTop: boolean = useAppSelector((state) => state.movies.loadingTopRated);
-  let loadStatusUp: boolean = useAppSelector((state) => state.movies.loadingUpcoming);
-  let moviesNowPlayFiltered: IMovies[] | any;
-  let moviesPopFiltered: IMovies[] | any;
-  let moviesTopFiltered: IMovies[] | any;
-  let moviesUpFiltered: IMovies[] | any;
+
+  let data: IDataProps = {
+    popularMovies: useAppSelector((state) => state.medias.popularMovies),
+    topRatedMovies: useAppSelector((state) => state.medias.topRatedMovies),
+    nowPlayingMovies: useAppSelector((state) => state.medias.nowPlayingMovies),
+    upcomingMovies: useAppSelector((state) => state.medias.upcomingMovies),
+    popularTV: useAppSelector((state) => state.medias.popularTV),
+    topRatedTV: useAppSelector((state) => state.medias.topRatedTV),
+    airingTodayTV: useAppSelector((state) => state.medias.airingTodayTV),
+    onTheAirTV: useAppSelector((state) => state.medias.onTheAirTV),
+  };
+
+  let dataFiltered: IDataProps = {
+    popularMovies: [],
+    topRatedMovies: [],
+    nowPlayingMovies: [],
+    upcomingMovies: [],
+    popularTV: [],
+    topRatedTV: [],
+    airingTodayTV: [],
+    onTheAirTV: [],
+  };
+
+  let dataLoadStatus = {
+    popularMovies: useAppSelector((state) => state.medias.loadingPopularMovies),
+    topRatedMovies: useAppSelector((state) => state.medias.loadingTopRatedMovies),
+    nowPlayingMovies: useAppSelector((state) => state.medias.loadingNowPlayingMovies),
+    upcomingMovies: useAppSelector((state) => state.medias.loadingUpcomingMovies),
+    popularTV: useAppSelector((state) => state.medias.loadingPopularTV),
+    topRatedTV: useAppSelector((state) => state.medias.loadingTopRatedTV),
+    airingTodayTV: useAppSelector((state) => state.medias.loadingAiringTodayTV),
+    onTheAirTV: useAppSelector((state) => state.medias.loadingOnTheAirTV),
+  };
 
   // internal states
   const [val, setVal] = useState('');
@@ -36,25 +69,19 @@ const Home: React.FC<HomeProps> = ({ color }) => {
   const bounds = useMeasure(RefUsed);
 
   const colorSB = { ...color, border: 'rgba(16, 20, 30, 1)', borderActive: 'rgba(90, 105, 143, 1)' };
+  type ObjectKey = keyof typeof data;
 
   if (val === '') {
-    moviesNowPlayFiltered = moviesNowPlay;
-    moviesPopFiltered = moviesPop;
-    moviesTopFiltered = moviesTop;
-    moviesUpFiltered = moviesUp;
+    for (let datum in data) {
+      dataFiltered[datum as ObjectKey] = data[datum as ObjectKey];
+    }
   } else {
-    moviesNowPlayFiltered = moviesNowPlay.filter(
-      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
-    );
-    moviesPopFiltered = moviesPop.filter(
-      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
-    );
-    moviesTopFiltered = moviesTop.filter(
-      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
-    );
-    moviesUpFiltered = moviesUp.filter(
-      (item) => item.title.toLowerCase().search(val.toLowerCase()) > -1
-    );
+    for (let datum in data) {
+      dataFiltered[datum as ObjectKey] = data[datum as ObjectKey].filter((item) => {
+        //console.log(item);
+        return item.title.toLowerCase().search(val.toLowerCase()) > -1;
+      });
+    }
   }
 
   let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;
@@ -68,7 +95,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     columnIndex: number;
     rowIndex: number;
     style: CSSProperties;
-    data: IMovies[];
+    data: IMedias[];
   }) => {
     //if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
     if (debug)
@@ -76,9 +103,9 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     let idx = rowIndex * colResp + columnIndex;
     let item = data[idx];
     let img =
-      item?.thumbnail.regular.large.search('w500null') > -1
+      item?.thumbnail?.regular.large.search('w500null') > -1
         ? '/no-image-available.jpg'
-        : item?.thumbnail.regular.large;
+        : item?.thumbnail?.regular.large;
     return (
       <>
         {idx < data.length && (
@@ -90,27 +117,6 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     );
   };
 
-  if (debug)
-    console.log(
-      'Home/render NowPlaying: ',
-      moviesNowPlayFiltered,
-      loadStatusNowPlay,
-      colResp,
-      bounds?.width
-    );
-  if (debug)
-    console.log('Home/render Popular: ', moviesPopFiltered, loadStatusPop, colResp, bounds?.width);
-  if (debug)
-    console.log(
-      'Home/render TopRated: ',
-      moviesTopFiltered,
-      loadStatusTop,
-      colResp,
-      moviesTopFiltered.length > colResp ? moviesTopFiltered.length / colResp : 1
-    );
-  if (debug)
-    console.log('Home/render Upcoming: ', moviesUpFiltered, loadStatusUp, colResp, bounds?.width);
-
   return (
     <HomeBody color={color}>
       <SearchBarHM
@@ -119,29 +125,38 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         setValue={setVal}
         placeholder="Search for movies or TV series"
       />
-      <h1 className="d-flex flex-row align-items-center">
-        Popular<span className="badge badge-light">{moviesPopFiltered.length}</span>
-      </h1>
-      {loadStatusPop === true ? (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      ) : null}
-      <HorizScrollSec className="d-flex flex-row justify-content-between" color={color}>
-        <Grid
-          className="GridHoriz custom-scroll-vert"
-          columnCount={moviesPopFiltered.length}
-          columnWidth={480}
-          height={260}
-          rowCount={1}
-          rowHeight={330}
-          width={bounds?.width}
-          itemData={moviesPopFiltered}
-        >
-          {Cell}
-        </Grid>
-      </HorizScrollSec>
+      {formDataArr.map((entry) => {
+        let key = entry.actionType.split('/')[1] as ObjectKey;
+        return (
+          <>
+            <h1 className="d-flex flex-row align-items-center" ref={ref}>
+              {entry.heading}
+              <span className="badge badge-light">{dataFiltered[key].length}</span>
+            </h1>
+            {dataLoadStatus[key] === true ? (
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ) : null}
+            <HorizScrollSec className="d-flex flex-row justify-content-between" color={color}>
+              <Grid
+                className="GridHoriz custom-scroll-vert"
+                columnCount={dataFiltered[key].length}
+                columnWidth={480}
+                height={260}
+                rowCount={1}
+                rowHeight={330}
+                width={bounds?.width}
+                itemData={dataFiltered[key]}
+              >
+                {Cell}
+              </Grid>
+            </HorizScrollSec>
+          </>
+        );
+      })}
 
+      {/*
       <h1 className="h1_wo_margin d-flex flex-row align-items-center">
         TopRated<span className="badge badge-light">{moviesTopFiltered.length}</span>
       </h1>
@@ -214,6 +229,8 @@ const Home: React.FC<HomeProps> = ({ color }) => {
           {Cell}
         </Grid>
       </Recommended>
+
+      */}
     </HomeBody>
   );
 };

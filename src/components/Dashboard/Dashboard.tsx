@@ -4,7 +4,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { logOut } from '../../store/authSlices';
 import styled from '@emotion/styled';
 import Home from '../Home/Home';
-import Movies from '../Movies/Movies';
+import Medias from '../Medias/Medias';
 import Series from '../Series/Series';
 import Bookmarked from '../Bookmarked/Bookmarked';
 import Logo from '../../images/logo.svg';
@@ -59,8 +59,8 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
         <Boards>
           <Routes>
             <Route path="home" element={<Home color={color} />}></Route>
-            <Route path="movies" element={<Movies />}></Route>
-            <Route path="series" element={<Series />}></Route>
+            <Route path="movies" element={<Medias mediaType="movie" color={color} />}></Route>
+            <Route path="series" element={<Medias mediaType="tv" color={color} />}></Route>
             <Route path="bookmarked" element={<Bookmarked />}></Route>
           </Routes>
         </Boards>
@@ -209,7 +209,7 @@ const Nav = styled.div<dashCSSProps>`
 `;
 
 const Boards = styled.div`
-  margin: 32px 0px 0px 4px;
+  margin: 32px 0px 20px 4px;
   width: 100%;
   position: relative;
 

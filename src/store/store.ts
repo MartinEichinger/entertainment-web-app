@@ -1,6 +1,8 @@
 import { configureStore, Action } from '@reduxjs/toolkit';
-import movieReducer from './movieSlices';
+import mediaReducer from './mediaSlices';
 import authReducer from './authSlices';
+import genreReducer from './genreSlices';
+
 import logger from './logger';
 import toast from './toast';
 //TEST
@@ -8,8 +10,9 @@ import { ThunkAction } from 'redux-thunk';
 
 export const store = configureStore({
   reducer: {
-    movies: movieReducer,
+    medias: mediaReducer,
     auth: authReducer,
+    genres: genreReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, toast),
 });
