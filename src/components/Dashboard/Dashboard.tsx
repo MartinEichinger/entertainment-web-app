@@ -5,6 +5,7 @@ import { logOut } from '../../store/authSlices';
 import styled from '@emotion/styled';
 import Home from '../Home/Home';
 import Medias from '../Medias/Medias';
+import Details from '../Details/Details';
 import Bookmarked from '../Bookmarked/Bookmarked';
 import Logo from '../../images/logo.svg';
 import { ReactComponent as TrendingSVG } from '../../images/icon-nav-home.svg';
@@ -60,6 +61,7 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
             <Route path="home" element={<Home color={color} />}></Route>
             <Route path="movies" element={<Medias mediaType="movie" color={color} />}></Route>
             <Route path="series" element={<Medias mediaType="tv" color={color} />}></Route>
+            <Route path="details/:mediaId" element={<Details color={color} />}></Route>
             <Route path="bookmarked" element={<Bookmarked />}></Route>
           </Routes>
         </Boards>

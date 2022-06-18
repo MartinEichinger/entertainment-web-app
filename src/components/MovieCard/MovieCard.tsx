@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as BookmarkEmpty } from '../../images/icon-bookmark-empty.svg';
 import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.svg';
 import oval from '../../images/Oval.png';
@@ -13,10 +14,15 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
+  const navigate = useNavigate();
   return (
     <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
       <div className="thumb">
-        <img src={img} alt="logo" />
+        <img
+          src={img}
+          alt="logo"
+          onClick={() => navigate('/dashboard/details/' + data.id, { replace: true })}
+        />
         <div className="bookmark d-flex flex-row justify-content-center align-items-center">
           {data?.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
@@ -26,7 +32,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
           <p className="light">{data?.year}</p>
           <img src={oval} alt="Point" />
           <div className="d-flex flex-row align-items-center">
-            {data?.category === 'Movie' ? <MovieMC /> : <TVMC />}
+            {data?.category === 'movie' ? <MovieMC /> : <TVMC />}
             <p className="light">{data?.category}</p>
           </div>
           <img src={oval} alt="Point" />
@@ -70,6 +76,7 @@ const MovieCardBody = styled.div<cssProp>`
       width: 100%;
       height: 174px;
       border-radius: 8px;
+      cursor: pointer;
     }
 
     .bookmark {
