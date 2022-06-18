@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { authStatus } from './store/authSlices';
@@ -37,19 +37,19 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const debug = true;
+  const debug = 2;
 
   const dispatch = useAppDispatch();
   dispatch(authStatus());
   var auth_token: string | null = useAppSelector((state) => state.auth.token);
 
   useEffect(() => {
-    if (debug) console.log('App/useEffect');
+    if (debug > 1) console.log('App/useEffect');
     dispatch(getTMDBMedias());
     dispatch(getTMDBGenres());
   });
 
-  if (debug) console.log('App/render');
+  if (debug > 0) console.log('App/render');
 
   return (
     <>

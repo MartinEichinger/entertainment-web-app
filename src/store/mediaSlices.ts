@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { IMovResults } from './api';
 import { getData } from './api';
 import { AppThunk } from './store';
 import capitalize from '../helpers/capitalize';
 
-const debug = true;
+const debug = 1;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
 const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
@@ -193,7 +192,7 @@ export const slice = createSlice({
   reducers: {
     // onStart
     mediasRequested: (state, action: PayloadAction<payloadBeginProps>) => {
-      if (debug) console.log('mediasRequested/Payload: ', action.payload);
+      if (debug > 0) console.log('mediasRequested/Payload: ', action.payload);
       if (requestTypes.includes(action.payload.type)) {
         let entry = ('loading' + capitalize(action.payload.type.split('/')[1])) as TObjectKeyMedia;
         (state[entry] as boolean) = true;
@@ -202,21 +201,14 @@ export const slice = createSlice({
 
     // onSuccess
     mediasReceived: (state, action: PayloadAction<payloadProps>) => {
-      if (debug) console.log('media/mediaReceived: ', action, requestTypes, action.payload.type);
+      if (debug > 0) console.log('media/mediaReceived: ', action, requestTypes, action.payload.type);
       var addObj = action.payload.medias;
 
       if (requestTypes.includes(action.payload.type)) {
         let entry = action.payload.type.split('/')[1] as TObjectKeyMedia;
-        if (debug) console.log('media/mediaReceivedInner: ', entry);
         (state[entry] as any[] | IMedias[]) = addObj;
       }
     },
-    /*     movieErrorUpdated: (state, action: PayloadAction<IMedias>) => {
-      if (debug) console.log('movy/movyErrorUpdated: ', action.payload);
-      var id = action.payload.id;
-      state.nowPlayingMovies[id - 1] = action.payload;
-      state.loadingPopular = false;
-    }, */
 
     // onError
     mediasRequestFailed: (state) => {
@@ -234,8 +226,9 @@ export const { mediasReceived, mediasRequested, mediasRequestFailed } = slice.ac
 // export action creators
 export const getTMDBMedias = (): AppThunk => async (dispatch) => {
   formDataArr.map((formData) => {
-    if (debug) console.log('getTMDBMedias: ', formData.message);
+    if (debug > 0) console.log('getTMDBMedias: ', formData.message);
     dispatch(getTMDBMedia(formData));
+    return 0;
   });
 };
 
@@ -246,7 +239,7 @@ export const getTMDBMedia =
     dispatch(mediasRequested({ type: formData.cat }));
 
     // Iterate about all movie pages
-    const maxLen = 500;
+    const maxLen = 250;
     let len = formData.wPage ? maxLen : 1;
     let mov: IMedias[] = [];
     let movies: IMedias[] = [];
@@ -258,7 +251,6 @@ export const getTMDBMedia =
       let res = await getData(searchUrl, formData.method);
       if (res.total_pages < maxLen) len = res.total_pages;
 
-      //console.log(res);
       mov = res.results.map((item: any) => {
         let relYear = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4);
         let name = item.title || item.name;
@@ -287,8 +279,9 @@ export const getTMDBMedia =
 
       movies.push(...mov);
     }
+
     // Dispatch prepared IMovies[]
-    if (debug) console.log('media/mediaInputReceived: ', movies, formData.actionType);
+    if (debug > 0) console.log('media/mediaInputReceived: ', movies, formData.actionType);
     dispatch(mediasReceived({ medias: movies, type: formData.actionType }));
     formData.actionType.split('/')[0] === 'movie'
       ? dispatch(getMediaList(0, 'movie'))
@@ -299,7 +292,7 @@ export const getMediaList =
   (genreId?: number, mediaType?: string): AppThunk =>
   async (dispatch, getState) => {
     let state = getState();
-    //console.log('getMediaList', state);
+
     let medias = [] as IMedias[];
     let uniqMedias = [];
     let uniqIDs: any[] = [];
@@ -307,15 +300,12 @@ export const getMediaList =
     formDataArr.map((set) => {
       let cat = set.actionType.split('/')[1] as TObjectKeyMedia;
       let datas = state.medias[cat] as IMedias[];
-      console.log('getMediaList/datas', datas, set.url, mediaType);
+
       if (set.url === mediaType) {
         medias.push(...datas);
       }
+      return 0;
     });
-    //console.log('getMediaList', medias, genreId);
-
-    //movies.sort((a, b) => a.id - b.id);
-    console.log('getMediaList/medias', medias);
 
     uniqMedias = medias.filter((el) => {
       const isDuplicate = uniqIDs.includes(el.id);
@@ -327,7 +317,8 @@ export const getMediaList =
       }
       return false;
     });
-    console.log('getMediaList', uniqMedias, mediaType);
+
+    if (debug > 1) console.log('getMediaList', uniqMedias, mediaType);
 
     // Dispatch prepared IMovies[]
     mediaType === 'movie'

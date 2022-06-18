@@ -2,10 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getData } from './api';
 import { AppThunk } from './store';
 
-const debug = true;
+const debug = 1;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
-const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
 
 export interface IGenre {
   id: number;
@@ -29,10 +28,6 @@ interface payloadProps {
   type: string;
 }
 
-interface payloadBeginProps {
-  type: string;
-}
-
 // initial state
 const initialState: IGenreState = {
   loadingGenre: false,
@@ -52,7 +47,7 @@ export const slice = createSlice({
 
     // onSuccess
     genresReceived: (state, action: PayloadAction<payloadProps>) => {
-      if (debug) console.log('genre/genresReceived: ', action);
+      if (debug > 0) console.log('genre/genresReceived: ', action);
       var addObj = action.payload.genres;
 
       if (action.payload.type === 'genre/movie') {
@@ -102,7 +97,7 @@ export const getTMDBGenres = (): AppThunk => async (dispatch) => {
 
     let res = await getData(searchUrl, set.method);
     let genreList = [...res.genres, { id: 0, name: 'All' }];
-    if (debug) console.log('genreSlices/res: ', genreList);
+    if (debug > 1) console.log('genreSlices/res: ', genreList);
 
     // Dispatch prepared IMovies[]
     set.list === 'genresMovies'

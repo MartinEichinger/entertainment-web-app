@@ -17,11 +17,11 @@ interface IMediaProps {
 }
 
 const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
-  const debug = true;
+  const debug = 1;
   const dispatch = useAppDispatch();
 
   let ref = React.useRef<HTMLDivElement>(null);
-  const [RefUsed, setRefUsed] = React.useState(ref);
+  const [RefUsed] = React.useState(ref); // setRefUsed
   const [selectedGenre, setSelectedGenre] = React.useState(0);
   const bounds = useMeasure(RefUsed);
 
@@ -31,8 +31,8 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   let catII = (mediaType === 'movie' ? 'allFilteredMovies' : 'allFilteredTV') as TObjectKeyMedia;
   let movies: IMedias[] = useAppSelector((state) => state.medias[catII]) as IMedias[];
 
-  if (debug) console.log('Movies/mediaGenres: ', mediaGenres, catII);
-  if (debug) console.log('Movies/movies: ', movies);
+  if (debug > 0) console.log('Movies/mediaGenres: ', mediaGenres, catII);
+  if (debug > 0) console.log('Movies/movies: ', movies);
 
   let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;
 
@@ -47,7 +47,7 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
     style: CSSProperties;
     data: IMedias[];
   }) => {
-    //if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
+    if (debug > 1) console.log('Medias/Cell: ', columnIndex, rowIndex, style, data);
     //if (debug)
     //  console.log('Home/Cell/ printLen vs availLen: ', rowIndex * colResp + columnIndex, data.length);
     let idx = rowIndex * colResp + columnIndex;
@@ -68,7 +68,7 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   };
 
   const selectByGenre = (genreId: number) => {
-    if (debug) console.log('Movies/selectByGenre', genreId);
+    if (debug > 1) console.log('Medias/selectByGenre', genreId);
     setSelectedGenre(genreId);
     dispatch(getMediaList(genreId, mediaType));
   };

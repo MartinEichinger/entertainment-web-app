@@ -5,7 +5,6 @@ import { logOut } from '../../store/authSlices';
 import styled from '@emotion/styled';
 import Home from '../Home/Home';
 import Medias from '../Medias/Medias';
-import Series from '../Series/Series';
 import Bookmarked from '../Bookmarked/Bookmarked';
 import Logo from '../../images/logo.svg';
 import { ReactComponent as TrendingSVG } from '../../images/icon-nav-home.svg';
@@ -26,12 +25,12 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ color }) => {
-  const debug = false;
+  const debug = 1;
   let location = useLocation();
   let navigate = useNavigate();
   let dispatch = useAppDispatch();
 
-  if (debug) console.log('Dashboard/render: ', location);
+  if (debug > 0) console.log('Dashboard/render: ', location);
 
   return (
     <>
@@ -97,6 +96,13 @@ const Nav = styled.div<dashCSSProps>`
   background: ${({ color }) => color.lightBlack} 0% 0% no-repeat padding-box;
   opacity: 1;
   border-radius: 20px;
+  position: fixed;
+  top: 0px;
+  left: calc((100vw - 1440px) / 2);
+
+  @media (max-width: 1439px) {
+    left: 0px;
+  }
 
   @media (max-width: 991px) {
     position: fixed;
@@ -209,8 +215,8 @@ const Nav = styled.div<dashCSSProps>`
 `;
 
 const Boards = styled.div`
-  margin: 32px 0px 20px 4px;
-  width: 100%;
+  margin: 32px 0px 20px 164px;
+  width: calc(100% - 168px);
   position: relative;
 
   @media (max-width: 991px) {

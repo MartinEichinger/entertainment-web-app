@@ -9,7 +9,7 @@ import { FixedSizeGrid as Grid } from 'react-window';
 import { CSSProperties } from 'react';
 import * as React from 'react';
 import useMeasure from '../../helpers/useMeasure';
-import { formDataArr, mediaState } from '../../store/mediaSlices';
+import { formDataArr } from '../../store/mediaSlices';
 
 interface HomeProps {
   color: any;
@@ -27,7 +27,7 @@ interface IDataProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  const debug = false;
+  const debug = 1;
 
   let data: IDataProps = {
     popularMovies: useAppSelector((state) => state.medias.popularMovies),
@@ -65,7 +65,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
   // internal states
   const [val, setVal] = useState('');
   let ref = React.useRef<HTMLDivElement>(null);
-  const [RefUsed, setRefUsed] = React.useState(ref);
+  const [RefUsed] = React.useState(ref); // setRefUsed
   const bounds = useMeasure(RefUsed);
 
   const colorSB = { ...color, border: 'rgba(16, 20, 30, 1)', borderActive: 'rgba(90, 105, 143, 1)' };
@@ -78,7 +78,6 @@ const Home: React.FC<HomeProps> = ({ color }) => {
   } else {
     for (let datum in data) {
       dataFiltered[datum as ObjectKey] = data[datum as ObjectKey].filter((item) => {
-        //console.log(item);
         return item.title.toLowerCase().search(val.toLowerCase()) > -1;
       });
     }
@@ -98,7 +97,7 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     data: IMedias[];
   }) => {
     //if (debug) console.log('Home/Cell: ', columnIndex, rowIndex, style, data);
-    if (debug)
+    if (debug > 1)
       console.log('Home/Cell/ printLen vs availLen: ', rowIndex * colResp + columnIndex, data.length);
     let idx = rowIndex * colResp + columnIndex;
     let item = data[idx];
@@ -155,82 +154,6 @@ const Home: React.FC<HomeProps> = ({ color }) => {
           </>
         );
       })}
-
-      {/*
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        TopRated<span className="badge badge-light">{moviesTopFiltered.length}</span>
-      </h1>
-      {loadStatusTop === true ? (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      ) : null}
-      <div ref={ref}>
-        <Recommended color={color}>
-          <Grid
-            className="Grid custom-scroll-horiz"
-            columnCount={moviesTopFiltered.length >= colResp ? colResp : moviesTopFiltered.length}
-            columnWidth={(bounds?.width - 18) / colResp}
-            height={520}
-            rowCount={
-              moviesTopFiltered.length > colResp ? Math.ceil(moviesTopFiltered.length / colResp) : 1
-            }
-            rowHeight={250}
-            width={bounds?.width}
-            itemData={moviesTopFiltered}
-          >
-            {Cell}
-          </Grid>
-        </Recommended>
-      </div>
-
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        Now Playing<span className="badge badge-light">{moviesNowPlayFiltered.length}</span>
-      </h1>
-      {loadStatusNowPlay === true ? (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      ) : null}
-      <Recommended color={color}>
-        <Grid
-          className="Grid custom-scroll-horiz"
-          columnCount={moviesNowPlayFiltered.length >= colResp ? colResp : moviesNowPlayFiltered.length}
-          columnWidth={(bounds?.width - 18) / colResp}
-          height={520}
-          rowCount={moviesNowPlayFiltered.length > 4 ? moviesNowPlayFiltered.length / colResp : 1}
-          rowHeight={250}
-          width={bounds?.width}
-          itemData={moviesNowPlayFiltered}
-        >
-          {Cell}
-        </Grid>
-      </Recommended>
-
-      <h1 className="h1_wo_margin d-flex flex-row align-items-center">
-        Upcoming<span className="badge badge-light">{moviesUpFiltered.length}</span>
-      </h1>
-      {loadStatusUp === true ? (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      ) : null}
-      <Recommended className="" color={color}>
-        <Grid
-          className="Grid custom-scroll-horiz"
-          columnCount={moviesUpFiltered.length >= colResp ? colResp : moviesUpFiltered.length}
-          columnWidth={(bounds?.width - 18) / colResp}
-          height={520}
-          rowCount={moviesUpFiltered.length > 4 ? moviesUpFiltered.length / colResp : 1}
-          rowHeight={250}
-          width={bounds?.width}
-          itemData={moviesUpFiltered}
-        >
-          {Cell}
-        </Grid>
-      </Recommended>
-
-      */}
     </HomeBody>
   );
 };
@@ -336,67 +259,7 @@ const HorizScrollSec = styled.div`
   }
 `;
 
-const Recommended = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 0px 20px;
-
-  .Grid {
-    //background-color: beige;
-
-    div {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: between;
-      //margin-right: 5px;
-
-      div {
-        margin-right: 20px;
-      }
-    }
-  }
-
-  .GridHoriz {
-    div {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: between;
-      //margin-right: 5px;
-
-      div {
-        margin-right: 20px;
-      }
-    }
-  }
-`;
-
 const MovieCardR = styled(MovieCard)`
   margin-right: 4px;
   margin-bottom: 32px;
 `;
-
-/* const SimpleBarHMH = styled(SimpleBar)`
-  max-width: 1240px;
-  width: calc(100vw - 200px);
-  .simplebar-track {
-    bottom: 300px;
-    right: 0px;
-  }
-
-  .simplebar-scrollbar.simplebar-visible:before {
-    border: 1px solid white;
-  }
-`;
-
-const SimpleBarHM = styled(SimpleBar)`
-  height: 520px; //calc(100vh - 590px);
-  .simplebar-track {
-    right: 5px;
-  }
-
-  .simplebar-scrollbar.simplebar-visible:before {
-    border: 1px solid white;
-  }
-`; */
