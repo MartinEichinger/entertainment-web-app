@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { time } from 'console';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getData } from '../../store/api';
 
 interface IDetailsProps {
@@ -15,6 +15,7 @@ const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
 const Details: React.FC<IDetailsProps> = ({ color }) => {
   let { mediaId } = useParams();
   const [mediaDetail, setMediaDetail] = useState<any>();
+  const navigate = useNavigate();
 
   const formData = {
     url: 'movie',
@@ -36,20 +37,30 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
         className="bg"
         style={{ backgroundImage: `url(${imgURL + '/' + mediaDetail?.backdrop_path})` }}
       ></div>
-      <div className="fg d-flex flex-row">
-        <img src={imgURL + '/' + mediaDetail?.poster_path} alt="foto" />
-        <div className="fg-details d-flex flex-column">
-          <h1>{mediaDetail?.title}</h1>
-          <h3 className="normal">({mediaDetail?.release_date.split('-')[0]})</h3>
-          <h5>
-            {mediaDetail?.genres.map((item: any) => {
-              return item.name + ', ';
-            })}
-            Vote: {mediaDetail?.vote_average}
-          </h5>
-          <h4 className="styled">{mediaDetail?.tagline}</h4>
-          <h4>Overview</h4>
-          <p>{mediaDetail?.overview}</p>
+      <div className="d-flex flex-column">
+        <div
+          className="link"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          back
+        </div>
+        <div className="fg d-flex flex-row">
+          <img src={imgURL + '/' + mediaDetail?.poster_path} alt="foto" />
+          <div className="fg-details d-flex flex-column">
+            <h1>{mediaDetail?.title}</h1>
+            <h3 className="normal">({mediaDetail?.release_date.split('-')[0]})</h3>
+            <h5>
+              {mediaDetail?.genres.map((item: any) => {
+                return item.name + ', ';
+              })}
+              Vote: {mediaDetail?.vote_average}
+            </h5>
+            <h4 className="styled">{mediaDetail?.tagline}</h4>
+            <h4>Overview</h4>
+            <p>{mediaDetail?.overview}</p>
+          </div>
         </div>
       </div>
     </MediaDetail>
@@ -63,6 +74,10 @@ type dashCSSProps = {
 };
 
 const MediaDetail = styled.div<dashCSSProps>`
+  .link {
+    position: relative;
+  }
+
   h1 {
     margin-bottom: 32px;
   }

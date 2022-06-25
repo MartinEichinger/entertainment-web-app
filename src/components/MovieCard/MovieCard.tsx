@@ -18,11 +18,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
   return (
     <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
       <div className="thumb">
-        <img
-          src={img}
-          alt="logo"
-          onClick={() => navigate('/dashboard/details/' + data.id, { replace: true })}
-        />
+        <img src={img} alt="logo" onClick={() => navigate('/dashboard/details/' + data.id)} />
         <div className="bookmark d-flex flex-row justify-content-center align-items-center">
           {data?.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
