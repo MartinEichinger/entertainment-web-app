@@ -47,7 +47,7 @@ export default function App() {
     if (debug > 1) console.log('App/useEffect');
     dispatch(getTMDBMedias());
     dispatch(getTMDBGenres());
-  });
+  }, []);
 
   if (debug > 0) console.log('App/render');
 
