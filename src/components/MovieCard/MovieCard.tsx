@@ -15,10 +15,18 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
   const navigate = useNavigate();
+  const debug = 1;
+
+  if (debug > 0) console.log('MovieCard: ', data);
+
   return (
     <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
       <div className="thumb">
-        <img src={img} alt="logo" onClick={() => navigate('/dashboard/details/' + data.id)} />
+        <img
+          src={img}
+          alt="logo"
+          onClick={() => navigate('/dashboard/details/' + data.category + '/' + data.id)}
+        />
         <div className="bookmark d-flex flex-row justify-content-center align-items-center">
           {data?.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
