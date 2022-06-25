@@ -25,6 +25,11 @@ body h4 {
   color: rgb(255, 255, 255);
   opacity: 0.75;
 }
+body h5 {
+  font: normal normal 500 15px/15px "Outfit";
+  color: rgb(255, 255, 255);
+  opacity: 0.75;
+}
 body p {
   font: normal normal 300 15px/15px "Outfit";
   color: rgb(255, 255, 255);
