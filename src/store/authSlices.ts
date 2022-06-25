@@ -65,7 +65,7 @@ export const slice = createSlice({
       localStorage.setItem('expirationDate', expirationDate as string);
     },
 
-    authRequested: (state, action) => {
+    authRequested: (state) => {
       state.loading = true;
     },
 
@@ -89,6 +89,7 @@ interface IAuthData {
 export const logIn =
   ({ email, password }: IAuthData): AppThunk =>
   async (dispatch) => {
+    dispatch(authRequested());
     let method = 'POST';
     let url = `https://audiophile.edmadd.eu/?rest_route=/simple-jwt-login/v1/auth&email=${email}&password=${password}&authkey=${authkey}`;
 

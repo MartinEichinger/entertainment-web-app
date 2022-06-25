@@ -206,7 +206,9 @@ export const slice = createSlice({
 
       if (requestTypes.includes(action.payload.type)) {
         let entry = action.payload.type.split('/')[1] as TObjectKeyMedia;
+        let entryLoad = ('loading' + capitalize(action.payload.type.split('/')[1])) as TObjectKeyMedia;
         (state[entry] as any[] | IMedias[]) = addObj;
+        (state[entryLoad] as boolean) = false;
       }
     },
 
@@ -236,7 +238,7 @@ export const getTMDBMedia =
   (formData: IFormData): AppThunk =>
   async (dispatch) => {
     // Dispatch Request
-    dispatch(mediasRequested({ type: formData.cat }));
+    dispatch(mediasRequested({ type: formData.actionType }));
 
     // Iterate about all movie pages
     const maxLen = 250;

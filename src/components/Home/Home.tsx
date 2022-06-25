@@ -116,6 +116,8 @@ const Home: React.FC<HomeProps> = ({ color }) => {
     );
   };
 
+  if (debug > 0) console.log('Home', dataLoadStatus);
+
   return (
     <HomeBody color={color}>
       <SearchBarHM
@@ -124,10 +126,10 @@ const Home: React.FC<HomeProps> = ({ color }) => {
         setValue={setVal}
         placeholder="Search for movies or TV series"
       />
-      {formDataArr.map((entry) => {
+      {formDataArr.map((entry, i) => {
         let key = entry.actionType.split('/')[1] as ObjectKey;
         return (
-          <>
+          <div key={i}>
             <h1 className="d-flex flex-row align-items-center" ref={ref}>
               {entry.heading}
               <span className="badge badge-light">{dataFiltered[key].length}</span>
@@ -136,22 +138,27 @@ const Home: React.FC<HomeProps> = ({ color }) => {
               <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
-            ) : null}
-            <HorizScrollSec className="d-flex flex-row justify-content-between" color={color}>
-              <Grid
-                className="GridHoriz custom-scroll-vert"
-                columnCount={dataFiltered[key].length}
-                columnWidth={480}
-                height={260}
-                rowCount={1}
-                rowHeight={330}
-                width={bounds?.width}
-                itemData={dataFiltered[key]}
-              >
-                {Cell}
-              </Grid>
-            </HorizScrollSec>
-          </>
+            ) : dataFiltered[key].length === 0 ? (
+              <div className="spinner">
+                <p>...Nothing found...</p>
+              </div>
+            ) : (
+              <HorizScrollSec className="d-flex flex-row justify-content-between" color={color}>
+                <Grid
+                  className="GridHoriz custom-scroll-vert"
+                  columnCount={dataFiltered[key].length}
+                  columnWidth={480}
+                  height={260}
+                  rowCount={1}
+                  rowHeight={330}
+                  width={bounds?.width}
+                  itemData={dataFiltered[key]}
+                >
+                  {Cell}
+                </Grid>
+              </HorizScrollSec>
+            )}
+          </div>
         );
       })}
     </HomeBody>

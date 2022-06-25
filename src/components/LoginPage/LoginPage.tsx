@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logIn, signUp } from '../../store/authSlices';
 import FormTextField from '../FormTextField/FormTextField';
 import Logo from '../../images/logo.svg';
@@ -14,7 +14,10 @@ interface LoginProps {
 const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   let navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const debug = false;
+  const debug = 2;
+
+  // external states
+  let authLoading = useAppSelector((state) => state.auth.loading);
 
   // internal states
   const [email, setEmail] = useState('');
@@ -31,7 +34,7 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   });
 
   const handleLogin = () => {
-    if (debug) console.log('LoginPage/handleLogin: ', email, pwd);
+    if (debug > 1) console.log('LoginPage/handleLogin: ', email, pwd);
     dispatch(logIn({ email: email, password: pwd }));
     navigate('/', { replace: true });
     setEmail('');
@@ -39,7 +42,7 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   };
 
   const handleSignUp = () => {
-    if (debug) console.log('LoginPage/handleSignUp', emailUp, pwdUp);
+    if (debug > 1) console.log('LoginPage/handleSignUp', emailUp, pwdUp);
     dispatch(signUp({ email: emailUp, password: pwdUp }));
     navigate('/', { replace: true });
     setEmailUp('');
@@ -47,7 +50,7 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
     setPwd2Up('');
   };
 
-  if (debug) console.log('LoginPage', color);
+  if (debug > 0) console.log('LoginPage', color, authLoading);
 
   return (
     <Login color={color}>
@@ -57,45 +60,58 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
           <div className="form d-flex flex-column align-items-start">
             <h1>Login</h1>
 
-            <FormTextFieldLP
-              color={color}
-              form_title=""
-              placeholder="Email address"
-              value={email}
-              error={error.eEmail}
-              setValue={setEmail}
-              setError={(val: boolean) => setError({ ...error, eEmail: val })}
-              required
-            />
-            <FormTextFieldLP
-              color={color}
-              form_title=""
-              placeholder="Password"
-              type="password"
-              value={pwd}
-              error={error.ePwd}
-              setValue={setPwd}
-              setError={(val: boolean) => setError({ ...error, ePwd: val })}
-              required
-            />
+            {authLoading === true ? (
+              <div className="spinner">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              <>
+                <FormTextFieldLP
+                  color={color}
+                  form_title=""
+                  placeholder="Email address"
+                  value={email}
+                  error={error.eEmail}
+                  setValue={setEmail}
+                  setError={(val: boolean) => setError({ ...error, eEmail: val })}
+                  required
+                />
+                <FormTextFieldLP
+                  color={color}
+                  form_title=""
+                  placeholder="Password"
+                  type="password"
+                  value={pwd}
+                  error={error.ePwd}
+                  setValue={setPwd}
+                  setError={(val: boolean) => setError({ ...error, ePwd: val })}
+                  required
+                />
 
-            <Button
-              type="submit"
-              onClick={handleLogin}
-              disabled={
-                error.eEmail === true || error.ePwd === true || error.eEmail === 2 || error.ePwd === 2
-              }
-              color={color}
-            >
-              Login to your account
-            </Button>
+                <Button
+                  type="submit"
+                  onClick={handleLogin}
+                  disabled={
+                    error.eEmail === true ||
+                    error.ePwd === true ||
+                    error.eEmail === 2 ||
+                    error.ePwd === 2
+                  }
+                  color={color}
+                >
+                  Login to your account
+                </Button>
 
-            <p>
-              Don't have an account?
-              <Link className="link" to={'/signup'}>
-                Sign Up
-              </Link>
-            </p>
+                <p>
+                  Don't have an account?
+                  <Link className="link" to={'/signup'}>
+                    Sign Up
+                  </Link>
+                </p>
+              </>
+            )}
           </div>
         )}
 
@@ -103,60 +119,70 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
           <div className="form d-flex flex-column align-items-start">
             <h1>Sign Up</h1>
 
-            <FormTextFieldLP
-              color={color}
-              form_title=""
-              placeholder="Email address"
-              value={emailUp}
-              error={error.eEmailUp}
-              setValue={setEmailUp}
-              setError={(val: boolean) => setError({ ...error, eEmailUp: val })}
-              required
-            />
+            {authLoading === true ? (
+              <div className="spinner">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              <>
+                <FormTextFieldLP
+                  color={color}
+                  form_title=""
+                  placeholder="Email address"
+                  value={emailUp}
+                  error={error.eEmailUp}
+                  setValue={setEmailUp}
+                  setError={(val: boolean) => setError({ ...error, eEmailUp: val })}
+                  required
+                />
 
-            <FormTextFieldLP
-              color={color}
-              form_title=""
-              placeholder="Password"
-              type="password"
-              value={pwdUp}
-              error={error.ePwdUp}
-              setValue={setPwdUp}
-              setError={(val: boolean) => setError({ ...error, ePwdUp: val })}
-              required
-            />
+                <FormTextFieldLP
+                  color={color}
+                  form_title=""
+                  placeholder="Password"
+                  type="password"
+                  value={pwdUp}
+                  error={error.ePwdUp}
+                  setValue={setPwdUp}
+                  setError={(val: boolean) => setError({ ...error, ePwdUp: val })}
+                  required
+                />
 
-            <FormTextFieldLP
-              color={color}
-              form_title=""
-              placeholder="Repeat password"
-              type="password"
-              value={pwd2Up}
-              error={error.ePwd2Up}
-              setValue={setPwd2Up}
-              setError={(val: boolean) => setError({ ...error, ePwd2Up: val })}
-              required
-            />
+                <FormTextFieldLP
+                  color={color}
+                  form_title=""
+                  placeholder="Repeat password"
+                  type="password"
+                  value={pwd2Up}
+                  error={error.ePwd2Up}
+                  setValue={setPwd2Up}
+                  setError={(val: boolean) => setError({ ...error, ePwd2Up: val })}
+                  required
+                />
 
-            <Button
-              type="submit"
-              onClick={handleSignUp}
-              disabled={
-                error.eEmailUp === (true || 2) ||
-                error.ePwdUp === (true || 2) ||
-                error.ePwd2Up === (true || 2)
-              }
-              color={color}
-            >
-              Create an account
-            </Button>
+                <Button
+                  type="submit"
+                  onClick={handleSignUp}
+                  disabled={
+                    error.eEmailUp === (true || 2) ||
+                    error.ePwdUp === (true || 2) ||
+                    error.ePwd2Up === (true || 2)
+                  }
+                  color={color}
+                >
+                  Create an account
+                </Button>
 
-            <p>
-              Already have an account?
-              <Link className="link" to={'/'}>
-                Login
-              </Link>
-            </p>
+                <p>
+                  Already have an account?
+                  <Link className="link" to={'/'}>
+                    Login
+                  </Link>
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -238,6 +264,12 @@ const Login = styled.div<loginCSSProps>`
         &:focus-visible {
           outline: 0px;
         }
+      }
+
+      .spinner {
+        width: 336px;
+        margin-right: 25px;
+        margin-bottom: 10px;
       }
     }
   }
