@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getData } from '../../store/api';
 import { ReactComponent as BackSVG } from '../../images/icon-back-button.svg';
+import { ReactComponent as PlaySVG } from '../../images/icon-play.svg';
 
 interface IDetailsProps {
   color: any;
@@ -12,26 +13,50 @@ const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH as string;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
 const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;
 
+type TModalParams = {
+  text: string;
+  closePopup: any;
+};
+
 type TMediaParams = {
   mediaId: string;
   mediaUrl: string;
 };
 
+const Popup: React.FC<TModalParams> = ({ text, closePopup }) => {
+  return (
+    <PopupBody className="popup">
+      <div className="popup_inner d-flex flex-column">
+        <iframe src={'https://www.youtube.com/embed/' + text}></iframe>
+        <button onClick={() => closePopup()}>close me</button>
+      </div>
+    </PopupBody>
+  );
+};
+
 const Details: React.FC<IDetailsProps> = ({ color }) => {
   let { mediaId, mediaUrl } = useParams<TMediaParams>();
   const [mediaDetail, setMediaDetail] = useState<any>();
+  const [videoDetail, setVideoDetail] = useState<any>();
+  const [showPop, setShowPop] = useState(false);
   const navigate = useNavigate();
   const debug = 2;
 
   const formData = {
     method: 'get',
   };
+
   useEffect(() => {
     let searchUrl = baseURL + mediaUrl + '/' + mediaId + '?' + apiKey;
+    let searchVideo = baseURL + mediaUrl + '/' + mediaId + '/videos?' + apiKey;
     if (debug > 0) console.log('useEffect: ', searchUrl);
     getData(searchUrl, formData.method).then((res) => {
       if (debug > 1) console.log(res);
       setMediaDetail(res);
+    });
+    getData(searchVideo, formData.method).then((res) => {
+      if (debug > 1) console.log(res);
+      setVideoDetail(res);
     });
   }, [formData.method, mediaId, mediaUrl]);
 
@@ -40,8 +65,18 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
   let overview = mediaDetail?.overview || '-';
   let tagline = mediaDetail?.tagline || '-';
   let vote_average = mediaDetail?.vote_average || '-';
+  let poster_path = mediaDetail?.poster_path || mediaDetail?.backdrop_path;
 
-  console.log('Details', mediaId);
+  let videoPath = videoDetail?.results.find((item: any) => {
+    return item.official === true;
+  });
+
+  const togglePopup = () => {
+    if (debug > 1) console.log('Details/togglePopup', showPop);
+    setShowPop(!showPop);
+  };
+
+  console.log('Details', mediaId, videoDetail);
 
   return (
     <MediaDetail color={color}>
@@ -57,7 +92,13 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
           }}
         />
         <div className="fg d-flex flex-row">
-          <img src={imgURL + '/' + mediaDetail?.poster_path} alt="foto" />
+          <div className="image d-flex flex-column justify-content-center align-items-center">
+            <img src={imgURL + '/' + poster_path} alt="foto" onClick={() => togglePopup()} />
+            <div className="svg" onClick={() => togglePopup()}>
+              <PlaySVG />
+            </div>
+          </div>
+
           <div className="fg-details d-flex flex-column">
             <h1>{title}</h1>
             <h3 className="normal">({release_date?.split('-')[0]})</h3>
@@ -73,6 +114,7 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
           </div>
         </div>
       </div>
+      {showPop ? <Popup text={videoPath?.key} closePopup={togglePopup} /> : null}
     </MediaDetail>
   );
 };
@@ -115,8 +157,25 @@ const MediaDetail = styled.div<dashCSSProps>`
     position: relative;
     z-index: 1;
 
-    img {
+    .image {
       max-width: 40%;
+      cursor: pointer;
+
+      img {
+        position: relative;
+      }
+
+      .svg {
+        position: absolute;
+        padding: 30px;
+        border-radius: 50%;
+      }
+
+      &:hover {
+        .svg {
+          background-color: red;
+        }
+      }
     }
 
     .fg-details {
@@ -140,6 +199,34 @@ const MediaDetail = styled.div<dashCSSProps>`
         font-style: italic;
         color: ${({ color }) => color.greyishBlue};
       }
+    }
+  }
+`;
+
+const PopupBody = styled.div`
+  &.popup {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  .popup_inner {
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 25%;
+    bottom: 25%;
+    margin: auto;
+    background: white;
+
+    iframe {
+      height: 100%;
     }
   }
 `;
