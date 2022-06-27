@@ -238,16 +238,26 @@ const PopupBody = styled.div`
     bottom: 0;
     margin: auto;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
+    z-index: 10;
   }
   .popup_inner {
     position: absolute;
-    left: 25%;
-    right: 25%;
-    top: 25%;
-    bottom: 25%;
-    margin: auto;
+    left: calc((100vw - 1280px) / 2);
+    right: calc((100vw - 1280px) / 2);
+    top: calc((100vh - 1024px) / 2);
+    bottom: calc((100vh - 1024px) / 2);
+    //margin: auto;
     background: white;
+
+    @media (max-width: 1279px) {
+      left: 0px;
+      right: 0px;
+    }
+
+    @media (max-height: 1023px) {
+      top: 0px;
+      bottom: 0px;
+    }
 
     iframe {
       height: 100%;
