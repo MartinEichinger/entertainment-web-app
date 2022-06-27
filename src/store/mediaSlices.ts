@@ -126,6 +126,7 @@ export interface mediaState {
   airingTodayTV: any[] | IMedias[];
   onTheAirTV: any[] | IMedias[];
   allFilteredTV: any[] | IMedias[];
+  allBookmarkedMedia: number[];
 }
 
 export interface IMedias {
@@ -159,6 +160,10 @@ interface payloadBeginProps {
   type: string;
 }
 
+interface payloadBookProps {
+  id: number;
+}
+
 // initial state
 const initialState: mediaState = {
   loadingPopularMovies: false,
@@ -181,6 +186,7 @@ const initialState: mediaState = {
   airingTodayTV: [],
   onTheAirTV: [],
   allFilteredTV: [],
+  allBookmarkedMedia: [],
 };
 
 export type TObjectKeyMedia = keyof typeof initialState;
@@ -190,7 +196,7 @@ export const slice = createSlice({
   name: 'medias',
   initialState,
   reducers: {
-    // onStart
+    // onStart ////////////////////////////////////////
     mediasRequested: (state, action: PayloadAction<payloadBeginProps>) => {
       if (debug > 0) console.log('mediasRequested/Payload: ', action.payload);
       if (requestTypes.includes(action.payload.type)) {
@@ -199,7 +205,11 @@ export const slice = createSlice({
       }
     },
 
-    // onSuccess
+    mediaUpdateStarted: (state, action: PayloadAction<payloadBeginProps>) => {
+      if (debug > 0) console.log('mediaUpdateStarted/Payload: ', action.payload);
+    },
+
+    // onSuccess ////////////////////////////////////////
     mediasReceived: (state, action: PayloadAction<payloadProps>) => {
       if (debug > 0) console.log('media/mediaReceived: ', action, requestTypes, action.payload.type);
       var addObj = action.payload.medias;
@@ -212,7 +222,20 @@ export const slice = createSlice({
       }
     },
 
-    // onError
+    mediaUpdated: (state, action: PayloadAction<payloadBookProps>) => {
+      if (debug) console.log('media/mediaUpdated: ', action.payload);
+      let id = action.payload.id;
+
+      if (state.allBookmarkedMedia.includes(id)) {
+        state.allBookmarkedMedia = state.allBookmarkedMedia.filter((item) => {
+          return item !== id;
+        });
+      } else {
+        state.allBookmarkedMedia.push(id);
+      }
+    },
+
+    // onError ////////////////////////////////////////
     mediasRequestFailed: (state) => {
       state.loadingPopularTV = false;
     },
@@ -223,7 +246,8 @@ export const slice = createSlice({
 export default slice.reducer;
 
 // export actions
-export const { mediasReceived, mediasRequested, mediasRequestFailed } = slice.actions;
+export const { mediasReceived, mediaUpdated, mediasRequested, mediaUpdateStarted, mediasRequestFailed } =
+  slice.actions;
 
 // export action creators
 export const getTMDBMedias = (): AppThunk => async (dispatch) => {

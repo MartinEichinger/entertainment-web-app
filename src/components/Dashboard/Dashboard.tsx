@@ -62,7 +62,7 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
             <Route path="movies" element={<Medias mediaType="movie" color={color} />}></Route>
             <Route path="series" element={<Medias mediaType="tv" color={color} />}></Route>
             <Route path="details/:mediaUrl/:mediaId" element={<Details color={color} />}></Route>
-            <Route path="bookmarked" element={<Bookmarked />}></Route>
+            <Route path="bookmarked" element={<Medias mediaType="bookmark" color={color} />}></Route>
           </Routes>
         </Boards>
       </Dash>

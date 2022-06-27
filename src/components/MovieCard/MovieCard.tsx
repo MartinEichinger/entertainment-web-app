@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { mediaUpdated } from '../../store/mediaSlices';
 import { ReactComponent as BookmarkEmpty } from '../../images/icon-bookmark-empty.svg';
 import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.svg';
 import oval from '../../images/Oval.png';
@@ -15,9 +17,17 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const debug = 1;
 
-  if (debug > 0) console.log('MovieCard: ', data);
+  let bookmarkedMedia = useAppSelector((state) => state.medias.allBookmarkedMedia);
+
+  const toggleBookmark = () => {
+    if (debug > 0) console.log('MovieCard/toggleBookmark', data);
+    dispatch(mediaUpdated({ id: data.id }));
+  };
+
+  if (debug > 0) console.log('MovieCard: ', data, bookmarkedMedia);
 
   return (
     <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
@@ -27,8 +37,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
           alt="logo"
           onClick={() => navigate('/dashboard/details/' + data.category + '/' + data.id)}
         />
-        <div className="bookmark d-flex flex-row justify-content-center align-items-center">
-          {data?.isBookmarked ? <BookmarkFull /> : <BookmarkEmpty />}
+        <div
+          className="bookmark d-flex flex-row justify-content-center align-items-center"
+          onClick={() => toggleBookmark()}
+        >
+          {bookmarkedMedia.includes(data?.id) ? <BookmarkFull /> : <BookmarkEmpty />}
         </div>
       </div>
       <div className="descr d-flex flex-column">

@@ -25,14 +25,36 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   const [selectedGenre, setSelectedGenre] = React.useState(0);
   const bounds = useMeasure(RefUsed);
 
-  let catI = (mediaType === 'movie' ? 'genresMovies' : 'genresTV') as TObjectKeyGenre;
+  let catI: TObjectKeyGenre;
+  if (mediaType === 'movie') {
+    catI = 'genresMovies';
+  } else if (mediaType === 'tv') {
+    catI = 'genresTV';
+  }
+
   let mediaGenres: IGenre[] = useAppSelector((state) => state.genres[catI]) as IGenre[];
 
-  let catII = (mediaType === 'movie' ? 'allFilteredMovies' : 'allFilteredTV') as TObjectKeyMedia;
-  let movies: IMedias[] = useAppSelector((state) => state.medias[catII]) as IMedias[];
+  let tv: IMedias[] = useAppSelector((state) => state.medias['allFilteredTV']) as IMedias[];
+  let movies: IMedias[] = useAppSelector((state) => state.medias['allFilteredMovies']) as IMedias[];
+  let media: IMedias[] = [];
+  let bookmarkedMedia = useAppSelector((state) => state.medias.allBookmarkedMedia);
 
-  if (debug > 0) console.log('Movies/mediaGenres: ', mediaGenres, catII);
-  if (debug > 0) console.log('Movies/movies: ', movies);
+  if (mediaType === 'movie') {
+    media = movies;
+  } else if (mediaType === 'tv') {
+    media = tv;
+  } else if (mediaType === 'bookmark') {
+    let p1 = movies.filter((item) => {
+      return bookmarkedMedia.includes(item.id);
+    });
+    let p2 = tv.filter((item) => {
+      return bookmarkedMedia.includes(item.id);
+    });
+    media = p1.concat(p2);
+  }
+
+  if (debug > 0) console.log('Movies/mediaGenres: ', mediaGenres);
+  if (debug > 0) console.log('Movies/movies: ', media);
 
   let colResp = bounds?.width > 1000 ? 4 : bounds?.width > 750 ? 3 : bounds?.width > 500 ? 2 : 1;
 
@@ -76,33 +98,34 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   return (
     <MovieBody color={color}>
       <h1 className="d-flex flex-row align-items-center">
-        {mediaType === 'movie' ? 'Movies' : 'TV'}
-        <span className="badge badge-light">{movies.length}</span>
+        {mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV' : 'Bookmarked Media'}
+        <span className="badge badge-light">{media.length}</span>
       </h1>
       <div className="d-flex flex-row flex-wrap mb-3 mt-3">
-        {mediaGenres.map((genre, i) => {
-          return (
-            <GenreCard
-              className={genre.id === selectedGenre ? 'active' : ''}
-              color={color}
-              onClick={() => selectByGenre(genre.id)}
-            >
-              {genre.name}
-            </GenreCard>
-          );
-        })}
+        {mediaType !== 'bookmark' &&
+          mediaGenres?.map((genre, i) => {
+            return (
+              <GenreCard
+                className={genre.id === selectedGenre ? 'active' : ''}
+                color={color}
+                onClick={() => selectByGenre(genre.id)}
+              >
+                {genre.name}
+              </GenreCard>
+            );
+          })}
       </div>
       <div ref={ref}>
         <VertScrollSec color={color}>
           <Grid
             className="Grid custom-scroll-horiz"
-            columnCount={movies.length >= colResp ? colResp : movies.length}
+            columnCount={media.length >= colResp ? colResp : media.length}
             columnWidth={(bounds?.width - 18) / colResp}
             height={1020}
-            rowCount={movies.length > colResp ? Math.ceil(movies.length / colResp) : 1}
+            rowCount={media.length > colResp ? Math.ceil(media.length / colResp) : 1}
             rowHeight={250}
             width={bounds?.width}
-            itemData={movies}
+            itemData={media}
           >
             {Cell}
           </Grid>
