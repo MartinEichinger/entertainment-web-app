@@ -91,7 +91,7 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
             navigate(-1);
           }}
         />
-        <div className="fg d-flex flex-row">
+        <div className="fg d-flex flex-column flex-md-row">
           <div className="image d-flex flex-column justify-content-center align-items-center">
             <img src={imgURL + '/' + poster_path} alt="foto" onClick={() => togglePopup()} />
             <div className="svg" onClick={() => togglePopup()}>
@@ -130,6 +130,10 @@ const BackSVGDt = styled(BackSVG)`
   height: 24px;
   width: 24px;
   cursor: pointer;
+
+  @media (max-width: 575px) {
+    margin: 0px;
+  }
 `;
 
 const MediaDetail = styled.div<dashCSSProps>`
@@ -157,12 +161,26 @@ const MediaDetail = styled.div<dashCSSProps>`
     position: relative;
     z-index: 1;
 
+    @media (max-width: 575px) {
+      padding: 16px 0px;
+    }
+
     .image {
       max-width: 40%;
       cursor: pointer;
 
+      @media (max-width: 767px) {
+        max-width: 100%;
+      }
+
       img {
         position: relative;
+        object-fit: cover;
+        width: 100%;
+
+        @media (max-width: 767px) {
+          height: 30vh;
+        }
       }
 
       .svg {
@@ -180,6 +198,12 @@ const MediaDetail = styled.div<dashCSSProps>`
 
     .fg-details {
       padding: 32px;
+      max-width: 60%;
+
+      @media (max-width: 767px) {
+        max-width: 100%;
+        padding: 32px 0px;
+      }
 
       h1 {
         margin-bottom: 8px;
