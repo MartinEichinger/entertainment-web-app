@@ -41,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({ color }) => {
           color={color}
         >
           <img src={Logo} alt="logo" onClick={() => navigate('/', { replace: true })} />
-          <div className="link-items d-flex flex-row flex-lg-column align-items-center">
+          <div className="link-items d-flex flex-row flex-lg-column align-items-center mb-auto">
             {navItems.map((item, i) => {
               let active = location.pathname === item.link;
 
@@ -137,6 +137,12 @@ const Nav = styled.div<dashCSSProps>`
     @media (max-width: 575px) {
       width: 25px;
       height: 20px;
+    }
+  }
+
+  .link-items {
+    @media (max-width: 991px) {
+      margin-bottom: 0px !important;
     }
   }
 

@@ -101,7 +101,7 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
         {mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV' : 'Bookmarked Media'}
         <span className="badge badge-light">{media.length}</span>
       </h1>
-      <div className="d-flex flex-row flex-wrap mb-3 mt-3">
+      <div className="genre-scroll d-flex flex-row flex-wrap mb-3 mt-3 custom-scroll-horiz">
         {mediaType !== 'bookmark' &&
           mediaGenres?.map((genre, i) => {
             return (
@@ -142,6 +142,18 @@ type cssProps = {
 };
 
 const MovieBody = styled.div<cssProps>`
+  .genre-scroll {
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    @media (max-width: 1024px) {
+      flex-wrap: nowrap !important;
+    }
+  }
+
   .badge {
     margin-left: 15px;
     font-size: 12px;
@@ -162,6 +174,7 @@ const GenreCard = styled.div<cssProps>`
   margin: 5px;
   padding: 5px;
   cursor: pointer;
+  flex-shrink: 0;
 
   &.active {
     background-color: ${({ color }) => color.white};

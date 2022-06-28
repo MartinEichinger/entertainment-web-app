@@ -7,6 +7,7 @@ import { ReactComponent as BookmarkFull } from '../../images/icon-bookmark-full.
 import oval from '../../images/Oval.png';
 import { ReactComponent as Movie } from '../../images/icon-category-movie.svg';
 import { ReactComponent as TV } from '../../images/icon-category-tv.svg';
+import { ReactComponent as PlaySVG } from '../../images/icon-play.svg';
 
 interface MovieCardProps {
   img: string;
@@ -31,12 +32,19 @@ const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) =>
 
   return (
     <MovieCardBody className={className + ' movie-card-body d-flex flex-column'} color={color}>
-      <div className="thumb">
+      <div className="thumb d-flex flex-column justify-content-center align-items-center">
         <img
           src={img}
           alt="logo"
           onClick={() => navigate('/dashboard/details/' + data.category + '/' + data.id)}
         />
+        <div
+          className="playbutton d-flex flex-row justify-content-center align-items-center"
+          onClick={() => navigate('/dashboard/details/' + data.category + '/' + data.id)}
+        >
+          <PlaySVG />
+          <h4>Play</h4>
+        </div>
         <div
           className="bookmark d-flex flex-row justify-content-center align-items-center"
           onClick={() => toggleBookmark()}
@@ -89,6 +97,12 @@ const MovieCardBody = styled.div<cssProp>`
     height: 174px;
     position: relative;
 
+    &:hover {
+      .playbutton {
+        opacity: 1;
+      }
+    }
+
     img {
       width: 100%;
       height: 174px;
@@ -107,6 +121,22 @@ const MovieCardBody = styled.div<cssProp>`
       //padding-top: 3px;
       background-color: ${({ color }) => color.grey50};
       cursor: pointer;
+    }
+
+    .playbutton {
+      position: absolute;
+      cursor: pointer;
+      opacity: 0;
+      background-color: rgba(255, 255, 255, 0.25);
+      border-radius: 28.5px;
+      padding: 9px;
+
+      h4 {
+        margin-left: 19px;
+        margin-right: 24px;
+        margin-bottom: 0px;
+        color: white;
+      }
     }
   }
 
