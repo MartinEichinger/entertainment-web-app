@@ -54,8 +54,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [www.frontendmentor.io/fullstack-movietv-app](https://www.frontendmentor.io/solutions/fullstack-movietv-app-build-with-react-typescript-and-virtual-lists-52IqGoyFba)
+- Live Site URL: [https://entertainment-web-app-edmadd.vercel.app/](https://entertainment-web-app-edmadd.vercel.app/)
 
 ## My process
 
