@@ -18,7 +18,7 @@ interface IMediaProps {
 }
 
 const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
-  const debug = 1;
+  const debug = 0;
   const dispatch = useAppDispatch();
 
   let ref = React.useRef<HTMLDivElement>(null);

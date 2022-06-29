@@ -37,7 +37,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const debug = 2;
+  const debug = 0;
 
   const dispatch = useAppDispatch();
   dispatch(authStatus());

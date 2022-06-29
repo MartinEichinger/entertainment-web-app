@@ -19,7 +19,7 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ img, color, data, className }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const debug = 1;
+  const debug = 0;
 
   let bookmarkedMedia = useAppSelector((state) => state.medias.allBookmarkedMedia);
 

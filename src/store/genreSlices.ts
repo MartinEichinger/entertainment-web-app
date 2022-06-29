@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getData } from './api';
 import { AppThunk } from './store';
 
-const debug = 1;
+const debug = 0;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
 

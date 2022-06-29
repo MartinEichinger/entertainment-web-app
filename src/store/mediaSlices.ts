@@ -3,7 +3,7 @@ import { getData } from './api';
 import { AppThunk } from './store';
 import capitalize from '../helpers/capitalize';
 
-const debug = 1;
+const debug = 0;
 const baseURL = process.env.REACT_APP_TMDB_BASIC_PATH;
 const apiKey = 'api_key=' + process.env.REACT_APP_TMDB_API_KEY;
 const imgURL = process.env.REACT_APP_TMDB_IMG_PATH;

@@ -14,7 +14,7 @@ interface LoginProps {
 const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
   let navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const debug = 2;
+  const debug = 0;
 
   // external states
   let authLoading = useAppSelector((state) => state.auth.loading);

@@ -40,7 +40,7 @@ const Details: React.FC<IDetailsProps> = ({ color }) => {
   const [videoDetail, setVideoDetail] = useState<any>();
   const [showPop, setShowPop] = useState(false);
   const navigate = useNavigate();
-  const debug = 2;
+  const debug = 0;
 
   const formData = {
     method: 'get',

@@ -27,7 +27,7 @@ interface IDataProps {
 }
 
 const Home: React.FC<HomeProps> = ({ color }) => {
-  const debug = 1;
+  const debug = 0;
 
   let data: IDataProps = {
     popularMovies: useAppSelector((state) => state.medias.popularMovies),

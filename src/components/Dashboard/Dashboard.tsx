@@ -26,7 +26,7 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ color }) => {
-  const debug = 1;
+  const debug = 0;
   let location = useLocation();
   let navigate = useNavigate();
   let dispatch = useAppDispatch();
