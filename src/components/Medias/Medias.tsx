@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { IGenre } from '../../store/genreSlices';
@@ -9,7 +10,7 @@ import useMeasure from '../../helpers/useMeasure';
 import { IMedias } from '../../store/mediaSlices';
 import MovieCard from '../MovieCard/MovieCard';
 import type { TObjectKeyGenre } from '../../store/genreSlices';
-import type { TObjectKeyMedia } from '../../store/mediaSlices';
+import FormSearchBar from '../FormSearchBar/FormSearchBar';
 
 interface IMediaProps {
   mediaType: string; // 'movie', 'tv'
@@ -24,6 +25,9 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   const [RefUsed] = React.useState(ref); // setRefUsed
   const [selectedGenre, setSelectedGenre] = React.useState(0);
   const bounds = useMeasure(RefUsed);
+  const [val, setVal] = useState('');
+
+  const colorSB = { ...color, border: 'rgba(16, 20, 30, 1)', borderActive: 'rgba(90, 105, 143, 1)' };
 
   let catI: TObjectKeyGenre;
   if (mediaType === 'movie') {
@@ -37,6 +41,7 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
   let tv: IMedias[] = useAppSelector((state) => state.medias['allFilteredTV']) as IMedias[];
   let movies: IMedias[] = useAppSelector((state) => state.medias['allFilteredMovies']) as IMedias[];
   let media: IMedias[] = [];
+  let mediaFiltered: IMedias[] = [];
   let bookmarkedMedia = useAppSelector((state) => state.medias.allBookmarkedMedia);
 
   if (mediaType === 'movie') {
@@ -51,6 +56,14 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
       return bookmarkedMedia.includes(item.id);
     });
     media = p1.concat(p2);
+  }
+
+  if (val === '') {
+    mediaFiltered = media;
+  } else {
+    mediaFiltered = media.filter((item) => {
+      return item.title.toLowerCase().search(val.toLowerCase()) > -1;
+    });
   }
 
   if (debug > 0) console.log('Movies/mediaGenres: ', mediaGenres);
@@ -97,9 +110,18 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
 
   return (
     <MovieBody color={color}>
+      {mediaType !== 'bookmark' && (
+        <SearchBarHM
+          color={colorSB}
+          value={val}
+          setValue={setVal}
+          placeholder={mediaType === 'movie' ? 'Search for movies' : 'Search for TV series'}
+        />
+      )}
+
       <h1 className="d-flex flex-row align-items-center">
         {mediaType === 'movie' ? 'Movies' : mediaType === 'tv' ? 'TV' : 'Bookmarked Media'}
-        <span className="badge badge-light">{media.length}</span>
+        <span className="badge badge-light">{mediaFiltered.length}</span>
       </h1>
       <div className="genre-scroll d-flex flex-row flex-wrap mb-3 mt-3 custom-scroll-horiz">
         {mediaType !== 'bookmark' &&
@@ -119,13 +141,13 @@ const Medias: React.FC<IMediaProps> = ({ mediaType, color }) => {
         <VertScrollSec color={color}>
           <Grid
             className="Grid custom-scroll-horiz"
-            columnCount={media.length >= colResp ? colResp : media.length}
+            columnCount={mediaFiltered.length >= colResp ? colResp : mediaFiltered.length}
             columnWidth={(bounds?.width - 18) / colResp}
             height={1020}
-            rowCount={media.length > colResp ? Math.ceil(media.length / colResp) : 1}
+            rowCount={mediaFiltered.length > colResp ? Math.ceil(mediaFiltered.length / colResp) : 1}
             rowHeight={250}
             width={bounds?.width}
-            itemData={media}
+            itemData={mediaFiltered}
           >
             {Cell}
           </Grid>
@@ -141,9 +163,29 @@ type cssProps = {
   color: any;
 };
 
+const SearchBarHM = styled(FormSearchBar)`
+  max-width: 1184px;
+  width: calc(100vw - 256px);
+
+  @media (max-width: 991px) {
+    width: calc(100vw - 57px);
+  }
+
+  @media (max-width: 575px) {
+    width: calc(100vw - 57px);
+  }
+`;
+
 const MovieBody = styled.div<cssProps>`
+  margin-top: 32px;
+
+  h1 {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
   .genre-scroll {
-    overflow-x: scroll;
+    overflow-x: auto;
 
     &::-webkit-scrollbar {
       height: 3px;
