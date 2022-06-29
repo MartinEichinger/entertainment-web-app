@@ -194,6 +194,10 @@ const HomeBody = styled.div<cssProps>`
   h1 {
     margin-top: 25px;
     margin-bottom: 25px;
+    margin: 15px 0px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    background-color: ${({ color }) => color.greyishBlue};
 
     @media (max-width: 991px) {
       margin: 25px 25px 25px 0px;
@@ -217,7 +221,7 @@ const HomeBody = styled.div<cssProps>`
     .badge {
       margin-left: 15px;
       font-size: 12px;
-      background-color: ${({ color }) => color.greyishBlue};
+      background-color: ${({ color }) => color.lightBlack};
     }
   }
 `;
