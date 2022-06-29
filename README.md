@@ -7,7 +7,7 @@ This is a solution to the [Entertainment web app challenge on Frontend Mentor](h
 - [Overview](#overview)
   - [The challenge](#the-challenge)
   - [Screenshot](#screenshot)
-  - [Requirements] (#requirements)
+  - [Requirements](#requirements)
   - [Links](#links)
 - [My process](#my-process)
   - [Built with](#built-with)
@@ -66,9 +66,9 @@ Users should be able to:
 - CSS Grid / Flexbox
 - RWD
 - [React](https://reactjs.org/) - JS library
-- [React Redux] (https://react-redux.js.org) - A Predictable State Container for JS Apps
+- [React Redux](https://react-redux.js.org) - A Predictable State Container for JS Apps
 - [React Router](https://v5.reactrouter.com/) - React Router Library
-- [React Window]j(https://react-window.now.sh/) - Render large lists using virtualization
+- [React Window](https://react-window.now.sh/) - Render large lists using virtualization
 - [Styled Components](https://emotion.sh/) - Styled components with emotion.sh
 - [Typescript](https://www.typescriptlang.org/) - JS with syntax for types
 
