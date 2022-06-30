@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logIn, signUp } from '../../store/authSlices';
 import FormTextField from '../FormTextField/FormTextField';
 import Logo from '../../images/logo.svg';
+import { ReactComponent as TMDB } from '../../images/icon-tmdb.svg';
 
 interface LoginProps {
   signup?: boolean;
@@ -185,6 +186,7 @@ const LoginPage: React.FC<LoginProps> = ({ signup = false, color }) => {
             )}
           </div>
         )}
+        <TMDBLP />
       </div>
     </Login>
   );
@@ -195,6 +197,11 @@ export default LoginPage;
 interface loginCSSProps {
   color: any;
 }
+
+const TMDBLP = styled(TMDB)`
+  max-width: 336px;
+  margin-top: 84px;
+`;
 
 const Button = styled.button<loginCSSProps>`
   width: 336px;
